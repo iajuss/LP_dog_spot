@@ -9,7 +9,7 @@ type SearchBarProps = {
 
 export function SearchBar({ defaultValue = "", compact = false }: SearchBarProps) {
   return (
-    <form action="/espacos" className={compact ? "flex gap-2" : "rounded-3xl bg-white p-2 shadow-xl shadow-emerald-950/10"} onSubmit={() => trackEvent("search_started")}>
+    <form action="/espacos" className={compact ? "flex gap-2" : "flex items-center gap-2 rounded-3xl bg-white p-2 shadow-xl shadow-emerald-950/10"} onSubmit={() => trackEvent("search_started")}>
       <label className="sr-only" htmlFor="busca">
         Bairro ou região em São Paulo
       </label>
@@ -21,7 +21,7 @@ export function SearchBar({ defaultValue = "", compact = false }: SearchBarProps
         placeholder="Bairro ou zona"
         type="search"
       />
-      <button className="rounded-2xl bg-emerald-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-800" type="submit">
+      <button className="shrink-0 rounded-2xl bg-emerald-950 px-6 py-3 text-sm font-bold text-white transition hover:bg-emerald-800" type="submit">
         Explorar
       </button>
     </form>

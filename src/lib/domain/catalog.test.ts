@@ -1,4 +1,4 @@
-import { SPACES, SPACE_TYPES, ZONES } from "./catalog";
+import { CATALOG_NEIGHBORHOODS, SPACES, SPACE_TYPES, SP_NEIGHBORHOODS, ZONES } from "./catalog";
 
 test("catálogo cobre São Paulo com trinta espaços e fotos únicas", () => {
   expect(SPACES).toHaveLength(30);
@@ -34,4 +34,24 @@ test("nenhum bairro se repete dentro da mesma zona", () => {
     const labels = SPACES.filter((space) => space.zone === zone).map((space) => space.neighborhoodLabel);
     expect(new Set(labels).size, `bairro repetido na zona ${zone}`).toBe(labels.length);
   }
+});
+
+test("todo espaço expõe o bairro sem o prefixo de região", () => {
+  for (const space of SPACES) {
+    expect(space.neighborhood, `bairro ausente: ${space.slug}`).toBeTruthy();
+    expect(space.neighborhood).not.toMatch(/^Região/);
+    expect(space.neighborhoodLabel).toContain(space.neighborhood);
+  }
+});
+
+test("os bairros do catálogo saem ordenados e sem repetição", () => {
+  expect(CATALOG_NEIGHBORHOODS.length).toBe(new Set(CATALOG_NEIGHBORHOODS).size);
+  expect(CATALOG_NEIGHBORHOODS).toEqual([...CATALOG_NEIGHBORHOODS].sort((a, b) => a.localeCompare(b, "pt-BR")));
+  expect(CATALOG_NEIGHBORHOODS).toContain("Pinheiros");
+});
+
+test("a lista do formulário cobre bairros além dos que já têm espaço", () => {
+  for (const neighborhood of CATALOG_NEIGHBORHOODS) expect(SP_NEIGHBORHOODS).toContain(neighborhood);
+  expect(SP_NEIGHBORHOODS.length).toBeGreaterThan(CATALOG_NEIGHBORHOODS.length);
+  expect(SP_NEIGHBORHOODS.length).toBe(new Set(SP_NEIGHBORHOODS).size);
 });

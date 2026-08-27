@@ -47,32 +47,32 @@ export default function HomePage() {
 
       <FeaturedSpaces />
 
-      <section className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
+      <section className="border-y border-emerald-950/10 bg-white/60">
+        <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
+          <header className="max-w-2xl">
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">Seu momento, seu ritmo</p>
             <h2 className="mt-2 text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl">
               Para que seu cão precisa de espaço?
             </h2>
+            <p className="mt-3 text-base leading-7 text-stone-600">
+              Escolha pelo que vocês querem fazer e veja só os espaços que aceitam esse uso.
+            </p>
+          </header>
+          <div className="mt-7 grid grid-cols-2 items-stretch gap-3 lg:grid-cols-4">
+            {USE_TYPES.map((useType, index) => (
+              <Link
+                className="group flex flex-col rounded-3xl border border-emerald-950/10 bg-white p-4 transition hover:bg-lime-200 sm:p-5"
+                href={`/espacos?uso=${useType}`}
+                key={useType}
+              >
+                <span className="text-2xl">{USE_ICONS[index]}</span>
+                <h3 className="mt-6 text-base font-black leading-tight text-emerald-950 sm:mt-8 sm:text-lg">
+                  {USE_TYPE_LABELS[useType]}
+                </h3>
+                <p className="mt-1 text-sm text-stone-600">Veja espaços na sua região.</p>
+              </Link>
+            ))}
           </div>
-          <Link className="text-sm font-bold text-emerald-900 underline underline-offset-4" href="/espacos">
-            Explorar catálogo →
-          </Link>
-        </div>
-        <div className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {USE_TYPES.map((useType, index) => (
-            <Link
-              className="group rounded-3xl border border-emerald-950/10 bg-white p-4 transition hover:bg-lime-200 sm:p-5"
-              href={`/espacos?uso=${useType}`}
-              key={useType}
-            >
-              <span className="text-2xl">{USE_ICONS[index]}</span>
-              <h3 className="mt-6 text-base font-black leading-tight text-emerald-950 sm:mt-8 sm:text-lg">
-                {USE_TYPE_LABELS[useType]}
-              </h3>
-              <p className="mt-1 text-sm text-stone-600">Veja espaços na sua região.</p>
-            </Link>
-          ))}
         </div>
       </section>
 

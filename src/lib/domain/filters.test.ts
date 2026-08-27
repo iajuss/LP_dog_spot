@@ -54,3 +54,18 @@ test("período percorre a URL de ida e volta", () => {
   expect(filtersFromSearchParams(params).timeSlot).toBe("manha");
   expect(filtersFromSearchParams(new URLSearchParams("periodo=meia-noite")).timeSlot).toBeUndefined();
 });
+
+test("filtra por bairro escolhido na lista", () => {
+  const matches = applyFilters(SPACES, { query: "", amenities: [], neighborhood: "Pinheiros" });
+
+  expect(matches.length).toBeGreaterThan(0);
+  for (const space of matches) expect(space.neighborhood).toBe("Pinheiros");
+});
+
+test("bairro percorre a URL de ida e volta", () => {
+  const params = filtersToSearchParams({ query: "", amenities: [], neighborhood: "Moema" });
+
+  expect(params.toString()).toBe("bairro=Moema");
+  expect(filtersFromSearchParams(params).neighborhood).toBe("Moema");
+  expect(filtersFromSearchParams(new URLSearchParams("bairro=Narnia")).neighborhood).toBeUndefined();
+});

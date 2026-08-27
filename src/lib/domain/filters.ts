@@ -1,5 +1,6 @@
 import {
   AMENITIES,
+  CATALOG_NEIGHBORHOODS,
   DOG_SIZES,
   SPACES,
   TIME_SLOTS,
@@ -20,6 +21,7 @@ export type SearchFilters = {
   dogSize?: DogSize;
   dogCount?: number;
   timeSlot?: TimeSlot;
+  neighborhood?: string;
   amenities: Amenity[];
 };
 
@@ -46,6 +48,7 @@ export function applyFilters(spaces: Space[], filters: SearchFilters): Space[] {
       (!filters.dogSize || space.dogSizes.includes(filters.dogSize)) &&
       (!filters.dogCount || space.maxDogs >= filters.dogCount) &&
       (!filters.timeSlot || space.availableSlots.includes(filters.timeSlot)) &&
+      (!filters.neighborhood || space.neighborhood === filters.neighborhood) &&
       filters.amenities.every((amenity) => space.amenities.includes(amenity))
     );
   });
@@ -60,6 +63,7 @@ export function filtersToSearchParams(filters: SearchFilters): URLSearchParams {
   if (filters.dogSize) params.set("porte", filters.dogSize);
   if (filters.dogCount) params.set("caes", String(filters.dogCount));
   if (filters.timeSlot) params.set("periodo", filters.timeSlot);
+  if (filters.neighborhood) params.set("bairro", filters.neighborhood);
   if (filters.amenities.length) params.set("recursos", filters.amenities.join(","));
 
   return params;
@@ -71,6 +75,7 @@ export function filtersFromSearchParams(params: URLSearchParams): SearchFilters 
   const dogSize = params.get("porte");
   const rawDogCount = Number(params.get("caes"));
   const timeSlot = params.get("periodo");
+  const neighborhood = params.get("bairro");
   const amenities = (params.get("recursos") ?? "")
     .split(",")
     .filter((value): value is Amenity => isOneOf(AMENITIES, value));
@@ -82,6 +87,7 @@ export function filtersFromSearchParams(params: URLSearchParams): SearchFilters 
     dogSize: isOneOf(DOG_SIZES, dogSize) ? dogSize : undefined,
     dogCount: Number.isInteger(rawDogCount) && rawDogCount >= 1 && rawDogCount <= 8 ? rawDogCount : undefined,
     timeSlot: isOneOf(TIME_SLOTS, timeSlot) ? timeSlot : undefined,
+    neighborhood: neighborhood && CATALOG_NEIGHBORHOODS.includes(neighborhood) ? neighborhood : undefined,
     amenities,
   };
 }

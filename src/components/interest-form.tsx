@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { DOG_SIZES, DOG_SIZE_LABELS, USE_TYPES, USE_TYPE_LABELS, ZONES, type Zone } from "@/lib/domain/catalog";
+import { DOG_SIZES, DOG_SIZE_LABELS, SP_NEIGHBORHOODS, USE_TYPES, USE_TYPE_LABELS, ZONES, type Zone } from "@/lib/domain/catalog";
+import { ComboBox } from "./combo-box";
 
 export type InterestContext = { desiredZone?: Zone; desiredNeighborhood?: string; spaceSlug?: string; requestKind: "reservation_request" | "availability_alert"; sourceKind: "space" | "region" | "general" };
 
@@ -31,8 +32,8 @@ export function InterestForm({ context }: { context: InterestContext }) {
     <label className="grid gap-2 text-sm font-bold text-emerald-950">Seu nome<input className="rounded-xl border border-stone-200 px-3 py-3 font-normal" name="name" required /></label>
     <label className="grid gap-2 text-sm font-bold text-emerald-950">Seu e-mail<input className="rounded-xl border border-stone-200 px-3 py-3 font-normal" name="email" required type="email" /></label>
     <label className="grid gap-2 text-sm font-bold text-emerald-950 sm:col-span-2">Telefone <span className="font-normal text-stone-500">(opcional)</span><input className="rounded-xl border border-stone-200 px-3 py-3 font-normal" name="phone" placeholder="(11) 99999-9999" type="tel" /></label>
-    <label className="grid gap-2 text-sm font-bold text-emerald-950">Em que bairro você mora?<input className="rounded-xl border border-stone-200 px-3 py-3 font-normal" name="homeNeighborhood" placeholder="Ex.: Moema" required /></label>
-    <label className="grid gap-2 text-sm font-bold text-emerald-950">Bairro onde gostaria de usar<input className="rounded-xl border border-stone-200 px-3 py-3 font-normal" defaultValue={context.desiredNeighborhood} name="desiredNeighborhood" placeholder="Ex.: Vila Mariana" required /></label>
+    <ComboBox label="Em que bairro você mora?" name="homeNeighborhood" options={SP_NEIGHBORHOODS} placeholder="Escolha ou digite" required />
+    <ComboBox hint="Não achou o seu? Escolha o mais próximo." label="Bairro onde gostaria de usar" name="desiredNeighborhood" options={SP_NEIGHBORHOODS} placeholder="Escolha ou digite" required value={context.desiredNeighborhood} />
     <label className="grid gap-2 text-sm font-bold text-emerald-950">Zona desejada<select className="rounded-xl border border-stone-200 bg-white px-3 py-3 font-normal" defaultValue={context.desiredZone} name="desiredZone" required>{ZONES.map((zone) => <option key={zone}>{zone}</option>)}</select></label>
     <label className="grid gap-2 text-sm font-bold text-emerald-950">Para qual momento?<select className="rounded-xl border border-stone-200 bg-white px-3 py-3 font-normal" name="useType" required>{USE_TYPES.map((type) => <option key={type} value={type}>{USE_TYPE_LABELS[type]}</option>)}</select></label>
     <label className="grid gap-2 text-sm font-bold text-emerald-950">Porte do cão<select className="rounded-xl border border-stone-200 bg-white px-3 py-3 font-normal" name="dogSize" required>{DOG_SIZES.map((size) => <option key={size} value={size}>{DOG_SIZE_LABELS[size]}</option>)}</select></label>

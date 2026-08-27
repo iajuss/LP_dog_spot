@@ -17,6 +17,8 @@ export type Space = {
   name: string;
   zone: Zone;
   neighborhoodLabel: string;
+  /** Nome do bairro sem o prefixo, para busca e autocomplete. */
+  neighborhood: string;
   approximateMapArea: string;
   spaceType: SpaceType;
   allowedUses: UseType[];
@@ -74,6 +76,7 @@ export const SPACES: Space[] = [
     name: "Pátio Santa Cecília",
     zone: "Centro",
     neighborhoodLabel: "Região de Santa Cecília",
+    neighborhood: "Santa Cecília",
     approximateMapArea: "Centro, em um trecho residencial",
     spaceType: "quintal",
     allowedUses: ["passeio", "treino"],
@@ -90,6 +93,7 @@ export const SPACES: Space[] = [
     name: "Terraço Bela Vista",
     zone: "Centro",
     neighborhoodLabel: "Região da Bela Vista",
+    neighborhood: "Bela Vista",
     approximateMapArea: "Centro, em uma área de acesso fácil",
     spaceType: "terraco",
     allowedUses: ["passeio", "socializacao"],
@@ -106,6 +110,7 @@ export const SPACES: Space[] = [
     name: "Jardim da Consolação",
     zone: "Centro",
     neighborhoodLabel: "Região da Consolação",
+    neighborhood: "Consolação",
     approximateMapArea: "Centro, próximo a um corredor arborizado",
     spaceType: "quintal",
     allowedUses: ["passeio", "brincadeira", "socializacao"],
@@ -122,6 +127,7 @@ export const SPACES: Space[] = [
     name: "Salão da Liberdade",
     zone: "Centro",
     neighborhoodLabel: "Região da Liberdade",
+    neighborhood: "Liberdade",
     approximateMapArea: "Centro, em uma quadra comercial",
     spaceType: "salao",
     allowedUses: ["treino", "socializacao"],
@@ -138,6 +144,7 @@ export const SPACES: Space[] = [
     name: "Quintal Higienópolis",
     zone: "Centro",
     neighborhoodLabel: "Região de Higienópolis",
+    neighborhood: "Higienópolis",
     approximateMapArea: "Centro, em uma rua arborizada",
     spaceType: "quintal",
     allowedUses: ["passeio"],
@@ -154,6 +161,7 @@ export const SPACES: Space[] = [
     name: "Deck da República",
     zone: "Centro",
     neighborhoodLabel: "Região da República",
+    neighborhood: "República",
     approximateMapArea: "Centro, perto de uma praça",
     spaceType: "terraco",
     allowedUses: ["passeio", "socializacao"],
@@ -172,6 +180,7 @@ export const SPACES: Space[] = [
     name: "Campo do Sol",
     zone: "Norte",
     neighborhoodLabel: "Região de Santana",
+    neighborhood: "Santana",
     approximateMapArea: "Norte, próximo a uma faixa de parques",
     spaceType: "campo",
     allowedUses: ["brincadeira", "passeio"],
@@ -188,6 +197,7 @@ export const SPACES: Space[] = [
     name: "Pátio das Oliveiras",
     zone: "Norte",
     neighborhoodLabel: "Região de Tucuruvi",
+    neighborhood: "Tucuruvi",
     approximateMapArea: "Norte, próximo a áreas arborizadas",
     spaceType: "quintal",
     allowedUses: ["passeio", "socializacao"],
@@ -204,6 +214,7 @@ export const SPACES: Space[] = [
     name: "Gramado Casa Verde",
     zone: "Norte",
     neighborhoodLabel: "Região da Casa Verde",
+    neighborhood: "Casa Verde",
     approximateMapArea: "Norte, em uma área de casas",
     spaceType: "campo",
     allowedUses: ["brincadeira", "treino"],
@@ -220,6 +231,7 @@ export const SPACES: Space[] = [
     name: "Arena Vila Guilherme",
     zone: "Norte",
     neighborhoodLabel: "Região de Vila Guilherme",
+    neighborhood: "Vila Guilherme",
     approximateMapArea: "Norte, em uma zona mista",
     spaceType: "agility",
     allowedUses: ["treino"],
@@ -236,6 +248,7 @@ export const SPACES: Space[] = [
     name: "Bosque do Mandaqui",
     zone: "Norte",
     neighborhoodLabel: "Região do Mandaqui",
+    neighborhood: "Mandaqui",
     approximateMapArea: "Norte, em uma encosta arborizada",
     spaceType: "campo",
     allowedUses: ["passeio", "brincadeira", "socializacao"],
@@ -252,6 +265,7 @@ export const SPACES: Space[] = [
     name: "Quintal do Jaçanã",
     zone: "Norte",
     neighborhoodLabel: "Região do Jaçanã",
+    neighborhood: "Jaçanã",
     approximateMapArea: "Norte, em um bairro residencial",
     spaceType: "quintal",
     allowedUses: ["passeio", "brincadeira"],
@@ -270,6 +284,7 @@ export const SPACES: Space[] = [
     name: "Jardim da Colina",
     zone: "Sul",
     neighborhoodLabel: "Região de Vila Mariana",
+    neighborhood: "Vila Mariana",
     approximateMapArea: "Sul, em uma área residencial arborizada",
     spaceType: "quintal",
     allowedUses: ["passeio", "brincadeira", "socializacao"],
@@ -286,6 +301,7 @@ export const SPACES: Space[] = [
     name: "Gramado do Vale",
     zone: "Sul",
     neighborhoodLabel: "Região de Santo Amaro",
+    neighborhood: "Santo Amaro",
     approximateMapArea: "Sul, em uma área de quintais amplos",
     spaceType: "campo",
     allowedUses: ["brincadeira", "treino", "socializacao"],
@@ -302,6 +318,7 @@ export const SPACES: Space[] = [
     name: "Recanto do Céu",
     zone: "Sul",
     neighborhoodLabel: "Região da Saúde",
+    neighborhood: "Saúde",
     approximateMapArea: "Sul, perto de praças locais",
     spaceType: "quintal",
     allowedUses: ["passeio", "brincadeira"],
@@ -318,6 +335,7 @@ export const SPACES: Space[] = [
     name: "Piscina de Moema",
     zone: "Sul",
     neighborhoodLabel: "Região de Moema",
+    neighborhood: "Moema",
     approximateMapArea: "Sul, em uma quadra residencial",
     spaceType: "piscina",
     allowedUses: ["brincadeira", "socializacao"],
@@ -334,6 +352,7 @@ export const SPACES: Space[] = [
     name: "Campo Belo Aberto",
     zone: "Sul",
     neighborhoodLabel: "Região do Campo Belo",
+    neighborhood: "Campo Belo",
     approximateMapArea: "Sul, em uma área plana",
     spaceType: "campo",
     allowedUses: ["passeio", "brincadeira", "treino", "socializacao"],
@@ -350,6 +369,7 @@ export const SPACES: Space[] = [
     name: "Pátio do Ipiranga",
     zone: "Sul",
     neighborhoodLabel: "Região do Ipiranga",
+    neighborhood: "Ipiranga",
     approximateMapArea: "Sul, próximo a um parque histórico",
     spaceType: "quintal",
     allowedUses: ["passeio", "treino"],
@@ -368,6 +388,7 @@ export const SPACES: Space[] = [
     name: "Quintal do Lago",
     zone: "Leste",
     neighborhoodLabel: "Região do Tatuapé",
+    neighborhood: "Tatuapé",
     approximateMapArea: "Leste, em uma área de casas e praças",
     spaceType: "quintal",
     allowedUses: ["brincadeira", "socializacao"],
@@ -384,6 +405,7 @@ export const SPACES: Space[] = [
     name: "Jardim do Arco",
     zone: "Leste",
     neighborhoodLabel: "Região de Anália Franco",
+    neighborhood: "Anália Franco",
     approximateMapArea: "Leste, em uma área residencial",
     spaceType: "quintal",
     allowedUses: ["brincadeira", "treino"],
@@ -400,6 +422,7 @@ export const SPACES: Space[] = [
     name: "Galpão da Mooca",
     zone: "Leste",
     neighborhoodLabel: "Região da Mooca",
+    neighborhood: "Mooca",
     approximateMapArea: "Leste, em um trecho industrial revitalizado",
     spaceType: "salao",
     allowedUses: ["treino", "brincadeira"],
@@ -416,6 +439,7 @@ export const SPACES: Space[] = [
     name: "Campo da Penha",
     zone: "Leste",
     neighborhoodLabel: "Região da Penha",
+    neighborhood: "Penha",
     approximateMapArea: "Leste, perto de uma área verde",
     spaceType: "campo",
     allowedUses: ["passeio", "brincadeira"],
@@ -432,6 +456,7 @@ export const SPACES: Space[] = [
     name: "Circuito Vila Formosa",
     zone: "Leste",
     neighborhoodLabel: "Região de Vila Formosa",
+    neighborhood: "Vila Formosa",
     approximateMapArea: "Leste, em uma rua residencial",
     spaceType: "agility",
     allowedUses: ["treino", "brincadeira"],
@@ -448,6 +473,7 @@ export const SPACES: Space[] = [
     name: "Terraço do Belém",
     zone: "Leste",
     neighborhoodLabel: "Região do Belém",
+    neighborhood: "Belém",
     approximateMapArea: "Leste, em uma quadra tranquila",
     spaceType: "terraco",
     allowedUses: ["passeio", "socializacao"],
@@ -466,6 +492,7 @@ export const SPACES: Space[] = [
     name: "Quintal da Praça",
     zone: "Oeste",
     neighborhoodLabel: "Região de Pinheiros",
+    neighborhood: "Pinheiros",
     approximateMapArea: "Oeste, perto da área verde urbana",
     spaceType: "quintal",
     allowedUses: ["treino", "brincadeira", "passeio"],
@@ -482,6 +509,7 @@ export const SPACES: Space[] = [
     name: "Bosque Claro",
     zone: "Oeste",
     neighborhoodLabel: "Região do Butantã",
+    neighborhood: "Butantã",
     approximateMapArea: "Oeste, em uma zona mais arborizada",
     spaceType: "campo",
     allowedUses: ["passeio", "treino", "brincadeira"],
@@ -498,6 +526,7 @@ export const SPACES: Space[] = [
     name: "Casa da Serra",
     zone: "Oeste",
     neighborhoodLabel: "Região de Alto de Pinheiros",
+    neighborhood: "Alto de Pinheiros",
     approximateMapArea: "Oeste, em área de casas",
     spaceType: "quintal",
     allowedUses: ["treino", "socializacao", "brincadeira"],
@@ -514,6 +543,7 @@ export const SPACES: Space[] = [
     name: "Piscina das Perdizes",
     zone: "Oeste",
     neighborhoodLabel: "Região de Perdizes",
+    neighborhood: "Perdizes",
     approximateMapArea: "Oeste, em uma rua residencial",
     spaceType: "piscina",
     allowedUses: ["brincadeira", "socializacao"],
@@ -530,6 +560,7 @@ export const SPACES: Space[] = [
     name: "Pátio Vila Madalena",
     zone: "Oeste",
     neighborhoodLabel: "Região de Vila Madalena",
+    neighborhood: "Vila Madalena",
     approximateMapArea: "Oeste, em uma ladeira tranquila",
     spaceType: "terraco",
     allowedUses: ["passeio", "socializacao"],
@@ -546,6 +577,7 @@ export const SPACES: Space[] = [
     name: "Arena da Lapa",
     zone: "Oeste",
     neighborhoodLabel: "Região da Lapa",
+    neighborhood: "Lapa",
     approximateMapArea: "Oeste, próximo a uma via movimentada",
     spaceType: "agility",
     allowedUses: ["treino", "brincadeira"],
@@ -558,6 +590,28 @@ export const SPACES: Space[] = [
     description: "Arena de treino com espaço para turma inteira de adestramento.",
   },
 ];
+
+/** Bairros que hoje têm espaço no catálogo, para filtrar a busca. */
+export const CATALOG_NEIGHBORHOODS: string[] = [...new Set(SPACES.map((space) => space.neighborhood))].sort((a, b) =>
+  a.localeCompare(b, "pt-BR"),
+);
+
+/**
+ * Bairros de São Paulo oferecidos no formulário de solicitação. Inclui os do
+ * catálogo e outros bairros onde ainda não temos espaço, para que o tutor
+ * consiga dizer onde precisa mesmo que a região ainda não esteja atendida.
+ */
+export const SP_NEIGHBORHOODS: string[] = [...new Set([
+  ...SPACES.map((space) => space.neighborhood),
+  "Aclimação", "Água Branca", "Alto da Lapa", "Barra Funda", "Bom Retiro", "Brooklin", "Brás",
+  "Butantã", "Cambuci", "Campo Grande", "Campo Limpo", "Cangaíba", "Carrão", "Chácara Klabin",
+  "Cidade Ademar", "Cidade Dutra", "Cidade Jardim", "Freguesia do Ó", "Grajaú", "Guaianases",
+  "Interlagos", "Itaim Bibi", "Itaquera", "Jabaquara", "Jaguaré", "Jardim América", "Jardim Ângela",
+  "Jardim Paulista", "Jardim São Luís", "Lapa", "Limão", "Morumbi", "Pacaembu", "Paraisópolis",
+  "Parque do Carmo", "Pinheiros", "Pirituba", "Raposo Tavares", "Sacomã", "Santa Teresinha",
+  "Santo Amaro", "São Miguel Paulista", "Sapopemba", "Socorro", "Sumaré", "Tremembé", "Tatuapé",
+  "Vila Andrade", "Vila Leopoldina", "Vila Matilde", "Vila Olímpia", "Vila Prudente", "Vila Sônia",
+])].sort((a, b) => a.localeCompare(b, "pt-BR"));
 
 export function getSpaceBySlug(slug: string): Space | undefined {
   return SPACES.find((space) => space.slug === slug);

@@ -1,5 +1,17 @@
-import { AMENITIES, AMENITY_LABELS, DOG_SIZES, DOG_SIZE_LABELS, TIME_SLOTS, TIME_SLOT_LABELS, USE_TYPES, USE_TYPE_LABELS, ZONES } from "@/lib/domain/catalog";
+import {
+  AMENITIES,
+  AMENITY_LABELS,
+  CATALOG_NEIGHBORHOODS,
+  DOG_SIZES,
+  DOG_SIZE_LABELS,
+  TIME_SLOTS,
+  TIME_SLOT_LABELS,
+  USE_TYPES,
+  USE_TYPE_LABELS,
+  ZONES,
+} from "@/lib/domain/catalog";
 import type { SearchFilters } from "@/lib/domain/filters";
+import { ComboBox } from "./combo-box";
 import { StyledSelect } from "./styled-select";
 
 type FilterPanelProps = {
@@ -14,10 +26,14 @@ export function FilterPanel({ filters }: FilterPanelProps) {
         <span className="rounded-full bg-lime-200 px-3 py-1 text-xs md:hidden">Abrir</span>
       </summary>
       <form action="/espacos" className="grid gap-5 border-t border-stone-100 p-5">
-        <label className="grid gap-2 text-sm font-medium text-emerald-950">
-          Buscar por bairro
-          <input className="rounded-xl border border-stone-200 px-3 py-2" defaultValue={filters.query} name="busca" placeholder="Ex.: Moema" />
-        </label>
+        <ComboBox
+          hint="Digite para encontrar mais rápido."
+          label="Bairro"
+          name="bairro"
+          options={CATALOG_NEIGHBORHOODS}
+          placeholder="Todos os bairros"
+          value={filters.neighborhood}
+        />
         <StyledSelect label="Zona" name="zona" options={ZONES.map((zone) => ({ label: zone, value: zone }))} placeholder="Todas as zonas" value={filters.zone} />
         <StyledSelect label="Para quê você procura?" name="uso" options={USE_TYPES.map((useType) => ({ label: USE_TYPE_LABELS[useType], value: useType }))} placeholder="Qualquer uso" value={filters.useType} />
         <StyledSelect label="Porte do cão" name="porte" options={DOG_SIZES.map((size) => ({ label: DOG_SIZE_LABELS[size], value: size }))} placeholder="Qualquer porte" value={filters.dogSize} />
@@ -32,7 +48,7 @@ export function FilterPanel({ filters }: FilterPanelProps) {
             </label>
           ))}
         </fieldset>
-        <button className="rounded-xl bg-emerald-950 px-4 py-3 text-sm font-bold text-white" type="submit">Aplicar filtros</button>
+        <button className="min-h-11 rounded-xl bg-emerald-950 px-4 py-3 text-sm font-bold text-white" type="submit">Aplicar filtros</button>
       </form>
     </details>
   );
