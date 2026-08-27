@@ -47,29 +47,30 @@ export default function HomePage() {
 
       <FeaturedSpaces />
 
-      <section className="border-y border-emerald-950/10 bg-white/60">
-        <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
+      {/* Seção 2 do corpo: verde sólido, o contraste forte do meio da página. */}
+      <section className="flex min-h-[100svh] flex-col justify-center bg-emerald-950 px-5 py-20 sm:px-8 lg:px-12">
+        <div className="mx-auto w-full max-w-6xl">
           <header className="max-w-2xl">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">Seu momento, seu ritmo</p>
-            <h2 className="mt-2 text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl">
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-lime-300">Seu momento, seu ritmo</p>
+            <h2 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl">
               Para que seu cão precisa de espaço?
             </h2>
-            <p className="mt-3 text-base leading-7 text-stone-600">
+            <p className="mt-3 text-base leading-7 text-emerald-100/75">
               Escolha pelo que vocês querem fazer e veja só os espaços que aceitam esse uso.
             </p>
           </header>
-          <div className="mt-7 grid grid-cols-2 items-stretch gap-3 lg:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 items-stretch gap-3 sm:gap-4 lg:grid-cols-4">
             {USE_TYPES.map((useType, index) => (
               <Link
-                className="group flex flex-col rounded-3xl border border-emerald-950/10 bg-white p-4 transition hover:bg-lime-200 sm:p-5"
+                className="group flex flex-col rounded-3xl border border-white/15 bg-white/[0.07] p-4 transition hover:-translate-y-1 hover:border-lime-300/60 hover:bg-white/[0.14] sm:p-5"
                 href={`/espacos?uso=${useType}`}
                 key={useType}
               >
                 <span className="text-2xl">{USE_ICONS[index]}</span>
-                <h3 className="mt-6 text-base font-black leading-tight text-emerald-950 sm:mt-8 sm:text-lg">
+                <h3 className="mt-6 text-base font-black leading-tight text-white transition group-hover:text-lime-300 sm:mt-8 sm:text-lg">
                   {USE_TYPE_LABELS[useType]}
                 </h3>
-                <p className="mt-1 text-sm text-stone-600">Veja espaços na sua região.</p>
+                <p className="mt-1 text-sm text-emerald-100/70">Veja espaços na sua região.</p>
               </Link>
             ))}
           </div>
@@ -78,7 +79,7 @@ export default function HomePage() {
 
       <FaqSection />
 
-      <footer className="border-t border-emerald-950/10 px-5 py-10 sm:px-8 lg:px-12">
+      <footer className="border-t border-emerald-950/10 bg-[#f8f4eb] px-5 py-10 sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-5 sm:flex-row sm:items-center">
           <BrandLogo />
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-stone-600">

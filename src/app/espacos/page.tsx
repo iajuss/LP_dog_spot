@@ -29,7 +29,7 @@ export default async function ResultsPage({ searchParams }: ResultsPageProps) {
     <main className="min-h-screen bg-[#f8f4eb] px-5 py-6 sm:px-8 lg:px-12">
       <header className="mx-auto flex max-w-7xl items-center justify-between">
         <BrandLogo />
-        <Link className="text-sm font-bold text-emerald-900 underline underline-offset-4" href={alertHref}>Quero ser avisado</Link>
+        <Link className="text-sm font-bold text-emerald-900 underline underline-offset-4" href={alertHref}>Receber avisos</Link>
       </header>
       <div className="mx-auto max-w-7xl py-10">
         <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">São Paulo</p>

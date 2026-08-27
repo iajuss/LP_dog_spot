@@ -19,14 +19,15 @@ test("a solicitação já chega com zona e bairro do espaço preenchidos", async
 
   expect(document.querySelector('input[name="desiredNeighborhood"]')).toHaveValue("Pinheiros");
   expect(screen.getByRole("combobox", { name: /bairro onde gostaria de usar/i })).toHaveValue("Pinheiros");
-  expect(screen.getByLabelText(/zona desejada/i)).toHaveValue("Oeste");
+  expect(document.querySelector('input[name="desiredZone"]')).toHaveValue("Oeste");
+  expect(screen.getByRole("button", { name: /zona desejada: oeste/i })).toBeInTheDocument();
 });
 
 test("também traz o uso e o período sugeridos pelo espaço", async () => {
   render(await ReservationPage({ searchParams: Promise.resolve(paramsFromSpace) }));
 
-  expect(screen.getByLabelText(/para qual momento/i)).toHaveValue(space.allowedUses[0]);
-  expect(screen.getByLabelText(/período desejado/i)).toHaveValue(space.availableSlots[0]);
+  expect(document.querySelector('input[name="useType"]')).toHaveValue(space.allowedUses[0]);
+  expect(document.querySelector('input[name="timeSlot"]')).toHaveValue(space.availableSlots[0]);
 });
 
 test("mostra para qual espaço é a solicitação", async () => {

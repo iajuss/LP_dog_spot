@@ -61,7 +61,8 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
           aria-controls={listId}
           aria-expanded={isOpen}
           autoComplete="off"
-          className="w-full rounded-2xl border border-emerald-950/10 bg-[#f8f4eb] px-4 py-3 pr-10 font-semibold outline-none transition placeholder:font-normal placeholder:text-stone-400 hover:border-emerald-800 focus:ring-2 focus:ring-lime-300"
+          // Mesmo peso e cor dos StyledSelect ao lado, para a coluna de filtros ficar uniforme.
+          className="w-full rounded-2xl border border-emerald-950/10 bg-[#f8f4eb] px-4 py-3 pr-10 font-semibold text-emerald-950 outline-none transition placeholder:font-semibold placeholder:text-emerald-950 hover:border-emerald-800 focus:ring-2 focus:ring-lime-300"
           id={`${listId}-input`}
           onBlur={() => {
             // Espera o clique na opção acontecer antes de fechar a lista.
