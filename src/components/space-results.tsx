@@ -9,7 +9,7 @@ type SpaceResultsProps = {
 
 export function SpaceResults({ spaces }: SpaceResultsProps) {
   return (
-    <section aria-label="Espaços ilustrativos" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+    <section aria-label="Espaços para cães" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
       {spaces.map((space) => <SpaceCard key={space.slug} space={space} />)}
     </section>
   );

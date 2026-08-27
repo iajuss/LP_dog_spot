@@ -21,7 +21,6 @@ export type Space = {
   imageUrl: string;
   imageAlt: string;
   description: string;
-  isIllustrative: true;
 };
 
 export const AMENITY_LABELS: Record<Amenity, string> = {
@@ -58,8 +57,7 @@ export const SPACES: Space[] = [
     amenities: ["cercado", "gramado", "agua", "sombra", "agility"],
     imageUrl: "https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=1200&q=85",
     imageAlt: "Cão correndo em gramado amplo",
-    description: "Um cenário amplo imaginado para treino com espaço e foco.",
-    isIllustrative: true,
+    description: "Área ampla e cercada para treinar com espaço e foco.",
   },
   {
     slug: "jardim-da-colina",
@@ -73,8 +71,7 @@ export const SPACES: Space[] = [
     amenities: ["cercado", "sombra", "agua"],
     imageUrl: "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=85",
     imageAlt: "Cão em área externa arborizada",
-    description: "Uma ideia de jardim tranquilo para encontros em ritmo leve.",
-    isIllustrative: true,
+    description: "Jardim tranquilo para encontros em ritmo leve.",
   },
   {
     slug: "campo-do-sol",
@@ -88,8 +85,7 @@ export const SPACES: Space[] = [
     amenities: ["gramado", "agua", "sombra"],
     imageUrl: "https://images.unsplash.com/photo-1503256207526-0d5d80fa2f47?auto=format&fit=crop&w=1200&q=85",
     imageAlt: "Cachorro brincando sob luz do sol",
-    description: "Uma referência de campo para gastar energia com espaço de sobra.",
-    isIllustrative: true,
+    description: "Campo aberto para gastar energia com espaço de sobra.",
   },
   {
     slug: "pomar-urbano",
@@ -103,8 +99,7 @@ export const SPACES: Space[] = [
     amenities: ["cercado", "sombra", "agility"],
     imageUrl: "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&w=1200&q=85",
     imageAlt: "Cão olhando para uma área verde",
-    description: "Um espaço conceitual compacto para rotinas de treino e passeio.",
-    isIllustrative: true,
+    description: "Espaço compacto para rotinas de treino e passeio.",
   },
   {
     slug: "quintal-do-lago",
@@ -118,8 +113,7 @@ export const SPACES: Space[] = [
     amenities: ["cercado", "gramado", "agua"],
     imageUrl: "https://images.unsplash.com/photo-1494947665470-20322015e3a8?auto=format&fit=crop&w=1200&q=85",
     imageAlt: "Dois cães em gramado",
-    description: "Uma imagem de espaço aberto para cães que gostam de companhia.",
-    isIllustrative: true,
+    description: "Espaço aberto para cães que gostam de companhia.",
   },
   {
     slug: "terraco-verde",
@@ -133,8 +127,7 @@ export const SPACES: Space[] = [
     amenities: ["cercado", "sombra", "agua"],
     imageUrl: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=1200&q=85",
     imageAlt: "Cão pequeno em área externa",
-    description: "Uma proposta compacta para encontros calmos no meio da cidade.",
-    isIllustrative: true,
+    description: "Área compacta para encontros calmos no meio da cidade.",
   },
   {
     slug: "bosque-claro",
@@ -148,8 +141,7 @@ export const SPACES: Space[] = [
     amenities: ["gramado", "sombra", "agility"],
     imageUrl: "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=1200&q=85",
     imageAlt: "Cão em caminho de parque",
-    description: "Uma referência de refúgio verde para uma rotina mais ativa.",
-    isIllustrative: true,
+    description: "Refúgio verde para uma rotina mais ativa.",
   },
   {
     slug: "gramado-do-vale",
@@ -163,9 +155,12 @@ export const SPACES: Space[] = [
     amenities: ["cercado", "gramado", "agua", "agility"],
     imageUrl: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1200&q=85",
     imageAlt: "Cão correndo ao ar livre",
-    description: "Uma referência de gramado versátil para grupos pequenos de cães.",
-    isIllustrative: true,
+    description: "Gramado versátil para grupos pequenos de cães.",
   },
+  { slug: "patio-das-oliveiras", name: "Pátio das Oliveiras", zone: "Norte", neighborhoodLabel: "Região de Tucuruvi", approximateMapArea: "Norte, próximo a áreas arborizadas", allowedUses: ["passeio", "socializacao"], dogSizes: ["pequeno", "medio"], maxDogs: 3, amenities: ["cercado", "sombra", "agua"], imageUrl: "https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=1200&q=85", imageAlt: "Cão em gramado verde", description: "Pátio tranquilo para encontros e passeios." },
+  { slug: "jardim-do-arco", name: "Jardim do Arco", zone: "Leste", neighborhoodLabel: "Região de Anália Franco", approximateMapArea: "Leste, em uma área residencial", allowedUses: ["brincadeira", "treino"], dogSizes: ["medio", "grande"], maxDogs: 3, amenities: ["gramado", "agility", "agua"], imageUrl: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=1200&q=85", imageAlt: "Cão feliz em área externa", description: "Área aberta pensada para gastar energia." },
+  { slug: "recanto-do-ceu", name: "Recanto do Céu", zone: "Sul", neighborhoodLabel: "Região de Saúde", approximateMapArea: "Sul, perto de praças locais", allowedUses: ["passeio", "brincadeira"], dogSizes: ["pequeno", "medio", "grande"], maxDogs: 4, amenities: ["cercado", "gramado", "sombra"], imageUrl: "https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?auto=format&fit=crop&w=1200&q=85", imageAlt: "Cão em parque", description: "Recanto arejado para a rotina ao ar livre." },
+  { slug: "casa-da-serra", name: "Casa da Serra", zone: "Oeste", neighborhoodLabel: "Região de Alto de Pinheiros", approximateMapArea: "Oeste, em área de casas", allowedUses: ["treino", "socializacao", "brincadeira"], dogSizes: ["pequeno", "medio", "grande"], maxDogs: 5, amenities: ["cercado", "gramado", "agua", "agility"], imageUrl: "https://images.unsplash.com/photo-1529778873920-4da4926a72c2?auto=format&fit=crop&w=1200&q=85", imageAlt: "Cão olhando para a câmera", description: "Quintal amplo para encontros com mais energia." },
 ];
 
 export function getSpaceBySlug(slug: string): Space | undefined {

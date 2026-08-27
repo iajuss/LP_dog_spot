@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Pátio Livre | Espaços para cães em São Paulo",
-  description: "Descubra espaços ilustrativos e manifeste interesse em novos lugares para cães.",
+  description: "Encontre quintais, jardins e áreas cercadas para passear, brincar e treinar com seu cão em São Paulo.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

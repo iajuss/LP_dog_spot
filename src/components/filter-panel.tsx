@@ -1,5 +1,6 @@
 import { AMENITIES, AMENITY_LABELS, DOG_SIZES, DOG_SIZE_LABELS, USE_TYPES, USE_TYPE_LABELS, ZONES } from "@/lib/domain/catalog";
 import type { SearchFilters } from "@/lib/domain/filters";
+import { StyledSelect } from "./styled-select";
 
 type FilterPanelProps = {
   filters: SearchFilters;
@@ -17,34 +18,10 @@ export function FilterPanel({ filters }: FilterPanelProps) {
           Buscar por bairro
           <input className="rounded-xl border border-stone-200 px-3 py-2" defaultValue={filters.query} name="busca" placeholder="Ex.: Moema" />
         </label>
-        <label className="grid gap-2 text-sm font-medium text-emerald-950">
-          Zona
-          <select className="rounded-xl border border-stone-200 bg-white px-3 py-2" defaultValue={filters.zone ?? ""} name="zona">
-            <option value="">Todas as zonas</option>
-            {ZONES.map((zone) => <option key={zone} value={zone}>{zone}</option>)}
-          </select>
-        </label>
-        <label className="grid gap-2 text-sm font-medium text-emerald-950">
-          Para quê você procura?
-          <select className="rounded-xl border border-stone-200 bg-white px-3 py-2" defaultValue={filters.useType ?? ""} name="uso">
-            <option value="">Qualquer uso</option>
-            {USE_TYPES.map((useType) => <option key={useType} value={useType}>{USE_TYPE_LABELS[useType]}</option>)}
-          </select>
-        </label>
-        <label className="grid gap-2 text-sm font-medium text-emerald-950">
-          Porte do cão
-          <select className="rounded-xl border border-stone-200 bg-white px-3 py-2" defaultValue={filters.dogSize ?? ""} name="porte">
-            <option value="">Qualquer porte</option>
-            {DOG_SIZES.map((size) => <option key={size} value={size}>{DOG_SIZE_LABELS[size]}</option>)}
-          </select>
-        </label>
-        <label className="grid gap-2 text-sm font-medium text-emerald-950">
-          Quantos cães?
-          <select className="rounded-xl border border-stone-200 bg-white px-3 py-2" defaultValue={filters.dogCount ?? ""} name="caes">
-            <option value="">Não importa</option>
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => <option key={count} value={count}>{count} {count === 1 ? "cão" : "cães"}</option>)}
-          </select>
-        </label>
+        <StyledSelect label="Zona" name="zona" options={ZONES.map((zone) => ({ label: zone, value: zone }))} placeholder="Todas as zonas" value={filters.zone} />
+        <StyledSelect label="Para quê você procura?" name="uso" options={USE_TYPES.map((useType) => ({ label: USE_TYPE_LABELS[useType], value: useType }))} placeholder="Qualquer uso" value={filters.useType} />
+        <StyledSelect label="Porte do cão" name="porte" options={DOG_SIZES.map((size) => ({ label: DOG_SIZE_LABELS[size], value: size }))} placeholder="Qualquer porte" value={filters.dogSize} />
+        <StyledSelect label="Quantos cães?" name="caes" options={[1, 2, 3, 4, 5, 6, 7, 8].map((count) => ({ label: `${count} ${count === 1 ? "cão" : "cães"}`, value: String(count) }))} placeholder="Não importa" value={filters.dogCount ? String(filters.dogCount) : undefined} />
         <fieldset className="grid gap-2">
           <legend className="text-sm font-medium text-emerald-950">Recursos desejados</legend>
           {AMENITIES.map((amenity) => (

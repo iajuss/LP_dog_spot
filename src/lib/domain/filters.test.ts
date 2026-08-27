@@ -11,7 +11,7 @@ test("combina zona, uso, porte, cães e recursos", () => {
     amenities: ["cercado"],
   });
 
-  expect(matches.map((space) => space.slug)).toEqual(["quintal-da-praca"]);
+  expect(matches.map((space) => space.slug)).toEqual(["quintal-da-praca", "casa-da-serra"]);
 });
 
 test("não serializa filtros vazios e preserva filtros selecionados", () => {

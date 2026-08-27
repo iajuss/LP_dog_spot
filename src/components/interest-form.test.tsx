@@ -1,8 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { InterestForm } from "./interest-form";
 
-test("mantém consentimento de marketing desmarcado e explica a confirmação", () => {
-  render(<InterestForm context={{ desiredZone: "Sul", desiredNeighborhood: "Moema", sourceKind: "general" }} />);
-  expect(screen.getByLabelText(/aceito receber novidades/i)).not.toBeChecked();
-  expect(screen.getByText(/não é uma reserva/i)).toBeInTheDocument();
+test("coleta uma solicitação de reserva com confirmação por e-mail", () => {
+  render(<InterestForm context={{ desiredZone: "Sul", desiredNeighborhood: "Moema", requestKind: "reservation_request", sourceKind: "general" }} />);
+  expect(screen.getByLabelText(/aceito receber comunicações/i)).not.toBeChecked();
+  expect(screen.getByLabelText(/seu nome/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/período desejado/i)).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: /enviar solicitação/i })).toBeInTheDocument();
 });

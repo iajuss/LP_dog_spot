@@ -10,7 +10,6 @@ export function SpaceCard({ space }: { space: Space }) {
       <Link aria-label={`Conhecer ${space.name}`} className="block" href={`/espacos/${space.slug}`}>
         <div className="relative aspect-[4/3] overflow-hidden bg-emerald-100">
           <Image alt={space.imageAlt} className="object-cover transition duration-500 group-hover:scale-105" fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" src={space.imageUrl} />
-          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-950">Catálogo ilustrativo</span>
         </div>
         <div className="grid gap-4 p-5">
           <div>

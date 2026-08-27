@@ -7,16 +7,17 @@ export async function POST(request: Request) {
   const checked = interestSchema.safeParse(raw);
   if (!checked.success) return NextResponse.json({ error: "Revise os campos obrigatórios." }, { status: 400 });
   const service = getSupabaseServer(); const auth = getSupabasePublic();
-  if (!service || !auth) return NextResponse.json({ error: "A captação por e-mail ainda não foi configurada." }, { status: 503 });
+  if (!service || !auth) return NextResponse.json({ error: "O envio de solicitações ainda não foi configurado." }, { status: 503 });
   const input = toInterestInput(checked.data);
   const { data: lead, error } = await service.from("interest_leads").insert({
-    contact_email: input.email, home_neighborhood: input.homeNeighborhood, desired_neighborhood: input.desiredNeighborhood,
+    contact_name: input.name, contact_email: input.email, contact_phone: input.phone || null, request_kind: input.requestKind,
+    home_neighborhood: input.homeNeighborhood, desired_neighborhood: input.desiredNeighborhood,
     desired_zone: input.desiredZone, use_type: input.useType, dog_size: input.dogSize, dog_count: input.dogCount,
-    desired_date: input.desiredDate, budget_cents: input.budgetCents, marketing_consent: input.marketingConsent,
+    desired_date: input.desiredDate || null, time_slot: input.timeSlot ?? null, budget_cents: input.budgetCents, marketing_consent: input.marketingConsent,
     space_slug: input.spaceSlug, source_kind: input.sourceKind, utm_source: input.utmSource, utm_medium: input.utmMedium,
     utm_campaign: input.utmCampaign, landing_path: input.landingPath, anonymous_session_id: input.anonymousSessionId,
   }).select("id").single();
-  if (error || !lead) return NextResponse.json({ error: "Não foi possível registrar seu interesse agora." }, { status: 500 });
+  if (error || !lead) return NextResponse.json({ error: "Não foi possível registrar sua solicitação agora." }, { status: 500 });
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
   const next = encodeURIComponent(`/confirmar?interest=${lead.id}`);
   const { error: otpError } = await auth.auth.signInWithOtp({ email: input.email, options: { emailRedirectTo: `${appUrl}/auth/callback?next=${next}` } });
