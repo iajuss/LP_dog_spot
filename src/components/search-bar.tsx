@@ -1,3 +1,7 @@
+"use client";
+
+import { trackEvent } from "@/lib/track-client";
+
 type SearchBarProps = {
   defaultValue?: string;
   compact?: boolean;
@@ -5,7 +9,7 @@ type SearchBarProps = {
 
 export function SearchBar({ defaultValue = "", compact = false }: SearchBarProps) {
   return (
-    <form action="/espacos" className={compact ? "flex gap-2" : "rounded-3xl bg-white p-2 shadow-xl shadow-emerald-950/10"}>
+    <form action="/espacos" className={compact ? "flex gap-2" : "rounded-3xl bg-white p-2 shadow-xl shadow-emerald-950/10"} onSubmit={() => trackEvent("search_started")}>
       <label className="sr-only" htmlFor="busca">
         Bairro ou região em São Paulo
       </label>
