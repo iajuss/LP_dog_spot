@@ -18,7 +18,14 @@ export default async function SpaceDetailPage({ params }: SpaceDetailPageProps) 
   const space = getSpaceBySlug((await params).slug);
   if (!space) notFound();
 
-  const requestParams = new URLSearchParams({ space: space.slug, zona: space.zone, bairro: space.neighborhoodLabel });
+  // O formulário só aceita bairros da lista, então mandamos o nome sem o prefixo.
+  const requestParams = new URLSearchParams({
+    space: space.slug,
+    zona: space.zone,
+    bairro: space.neighborhood,
+    uso: space.allowedUses[0],
+    periodo: space.availableSlots[0],
+  });
   const reserveHref = `/reservar?kind=reservation_request&${requestParams.toString()}`;
   const alertHref = `/reservar?kind=availability_alert&${requestParams.toString()}`;
 
