@@ -1,0 +1,45 @@
+import Link from "next/link";
+import { EmptyResults } from "@/components/empty-results";
+import { FilterPanel } from "@/components/filter-panel";
+import { SpaceResults } from "@/components/space-results";
+import { applyFilters, filtersFromSearchParams } from "@/lib/domain/filters";
+import { SPACES } from "@/lib/domain/catalog";
+
+type ResultsPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+function toSearchParams(values: Record<string, string | string[] | undefined>) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(values)) {
+    if (typeof value === "string") params.set(key, value);
+    if (Array.isArray(value)) params.set(key, value.join(","));
+  }
+  return params;
+}
+
+export default async function ResultsPage({ searchParams }: ResultsPageProps) {
+  const filters = filtersFromSearchParams(toSearchParams(await searchParams));
+  const spaces = applyFilters(SPACES, filters);
+
+  return (
+    <main className="min-h-screen bg-[#f8f4eb] px-5 py-6 sm:px-8 lg:px-12">
+      <header className="mx-auto flex max-w-7xl items-center justify-between">
+        <Link className="text-xl font-black tracking-tight text-emerald-950" href="/">Pátio Livre</Link>
+        <Link className="text-sm font-bold text-emerald-900 underline underline-offset-4" href="/interesse">Quero novidades</Link>
+      </header>
+      <div className="mx-auto max-w-7xl py-10">
+        <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">São Paulo, em validação</p>
+        <h1 className="mt-2 text-4xl font-black tracking-tight text-emerald-950">Encontre um pátio que combine com vocês</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">Referências de espaços privados pensadas para entender o que faz falta na sua região.</p>
+        <div className="mt-8 grid gap-7 md:grid-cols-[17rem_1fr]">
+          <aside><FilterPanel filters={filters} /></aside>
+          <section>
+            <div className="mb-5 flex items-center justify-between"><p className="text-sm font-medium text-stone-600">{spaces.length} {spaces.length === 1 ? "espaço ilustrativo" : "espaços ilustrativos"}</p><Link className="text-sm font-bold text-emerald-900" href="/interesse">Não achou? Conte para nós →</Link></div>
+            {spaces.length ? <SpaceResults filters={filters} spaces={spaces} /> : <EmptyResults filters={filters} />}
+          </section>
+        </div>
+      </div>
+    </main>
+  );
+}
