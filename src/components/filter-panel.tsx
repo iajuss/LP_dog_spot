@@ -1,4 +1,4 @@
-import { AMENITIES, AMENITY_LABELS, DOG_SIZES, DOG_SIZE_LABELS, USE_TYPES, USE_TYPE_LABELS, ZONES } from "@/lib/domain/catalog";
+import { AMENITIES, AMENITY_LABELS, DOG_SIZES, DOG_SIZE_LABELS, TIME_SLOTS, TIME_SLOT_LABELS, USE_TYPES, USE_TYPE_LABELS, ZONES } from "@/lib/domain/catalog";
 import type { SearchFilters } from "@/lib/domain/filters";
 import { StyledSelect } from "./styled-select";
 
@@ -22,6 +22,7 @@ export function FilterPanel({ filters }: FilterPanelProps) {
         <StyledSelect label="Para quê você procura?" name="uso" options={USE_TYPES.map((useType) => ({ label: USE_TYPE_LABELS[useType], value: useType }))} placeholder="Qualquer uso" value={filters.useType} />
         <StyledSelect label="Porte do cão" name="porte" options={DOG_SIZES.map((size) => ({ label: DOG_SIZE_LABELS[size], value: size }))} placeholder="Qualquer porte" value={filters.dogSize} />
         <StyledSelect label="Quantos cães?" name="caes" options={[1, 2, 3, 4, 5, 6, 7, 8].map((count) => ({ label: `${count} ${count === 1 ? "cão" : "cães"}`, value: String(count) }))} placeholder="Não importa" value={filters.dogCount ? String(filters.dogCount) : undefined} />
+        <StyledSelect label="Período" name="periodo" options={TIME_SLOTS.map((slot) => ({ label: TIME_SLOT_LABELS[slot], value: slot }))} placeholder="Qualquer período" value={filters.timeSlot} />
         <fieldset className="grid gap-2">
           <legend className="text-sm font-medium text-emerald-950">Recursos desejados</legend>
           {AMENITIES.map((amenity) => (

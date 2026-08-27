@@ -18,7 +18,7 @@ export function SearchBar({ defaultValue = "", compact = false }: SearchBarProps
         defaultValue={defaultValue}
         id="busca"
         name="busca"
-        placeholder="Bairro ou região em São Paulo"
+        placeholder="Bairro ou zona"
         type="search"
       />
       <button className="rounded-2xl bg-emerald-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-800" type="submit">

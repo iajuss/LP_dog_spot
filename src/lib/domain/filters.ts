@@ -2,11 +2,13 @@ import {
   AMENITIES,
   DOG_SIZES,
   SPACES,
+  TIME_SLOTS,
   USE_TYPES,
   ZONES,
   type Amenity,
   type DogSize,
   type Space,
+  type TimeSlot,
   type UseType,
   type Zone,
 } from "./catalog";
@@ -17,6 +19,7 @@ export type SearchFilters = {
   useType?: UseType;
   dogSize?: DogSize;
   dogCount?: number;
+  timeSlot?: TimeSlot;
   amenities: Amenity[];
 };
 
@@ -42,6 +45,7 @@ export function applyFilters(spaces: Space[], filters: SearchFilters): Space[] {
       (!filters.useType || space.allowedUses.includes(filters.useType)) &&
       (!filters.dogSize || space.dogSizes.includes(filters.dogSize)) &&
       (!filters.dogCount || space.maxDogs >= filters.dogCount) &&
+      (!filters.timeSlot || space.availableSlots.includes(filters.timeSlot)) &&
       filters.amenities.every((amenity) => space.amenities.includes(amenity))
     );
   });
@@ -55,6 +59,7 @@ export function filtersToSearchParams(filters: SearchFilters): URLSearchParams {
   if (filters.useType) params.set("uso", filters.useType);
   if (filters.dogSize) params.set("porte", filters.dogSize);
   if (filters.dogCount) params.set("caes", String(filters.dogCount));
+  if (filters.timeSlot) params.set("periodo", filters.timeSlot);
   if (filters.amenities.length) params.set("recursos", filters.amenities.join(","));
 
   return params;
@@ -65,6 +70,7 @@ export function filtersFromSearchParams(params: URLSearchParams): SearchFilters 
   const useType = params.get("uso");
   const dogSize = params.get("porte");
   const rawDogCount = Number(params.get("caes"));
+  const timeSlot = params.get("periodo");
   const amenities = (params.get("recursos") ?? "")
     .split(",")
     .filter((value): value is Amenity => isOneOf(AMENITIES, value));
@@ -75,6 +81,7 @@ export function filtersFromSearchParams(params: URLSearchParams): SearchFilters 
     useType: isOneOf(USE_TYPES, useType) ? useType : undefined,
     dogSize: isOneOf(DOG_SIZES, dogSize) ? dogSize : undefined,
     dogCount: Number.isInteger(rawDogCount) && rawDogCount >= 1 && rawDogCount <= 8 ? rawDogCount : undefined,
+    timeSlot: isOneOf(TIME_SLOTS, timeSlot) ? timeSlot : undefined,
     amenities,
   };
 }

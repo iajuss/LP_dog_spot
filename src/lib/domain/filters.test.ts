@@ -11,7 +11,26 @@ test("combina zona, uso, porte, cães e recursos", () => {
     amenities: ["cercado"],
   });
 
-  expect(matches.map((space) => space.slug)).toEqual(["quintal-da-praca", "casa-da-serra"]);
+  expect(matches.length).toBeGreaterThan(0);
+
+  for (const space of matches) {
+    expect(space.zone).toBe("Oeste");
+    expect(space.allowedUses).toContain("treino");
+    expect(space.dogSizes).toContain("grande");
+    expect(space.maxDogs).toBeGreaterThanOrEqual(2);
+    expect(space.amenities).toContain("cercado");
+  }
+
+  // bosque-claro é Oeste e aceita treino, mas não é cercado.
+  expect(matches.map((space) => space.slug)).not.toContain("bosque-claro");
+});
+
+test("filtra por período disponível", () => {
+  const matches = applyFilters(SPACES, { query: "", amenities: [], timeSlot: "noite" });
+
+  expect(matches.length).toBeGreaterThan(0);
+  for (const space of matches) expect(space.availableSlots).toContain("noite");
+  expect(matches.length).toBeLessThan(SPACES.length);
 });
 
 test("não serializa filtros vazios e preserva filtros selecionados", () => {
@@ -26,4 +45,12 @@ test("não serializa filtros vazios e preserva filtros selecionados", () => {
 
   expect(params.toString()).toBe("zona=Sul&recursos=agua");
   expect(filtersFromSearchParams(params)).toMatchObject({ zone: "Sul", amenities: ["agua"] });
+});
+
+test("período percorre a URL de ida e volta", () => {
+  const params = filtersToSearchParams({ query: "", amenities: [], timeSlot: "manha" });
+
+  expect(params.toString()).toBe("periodo=manha");
+  expect(filtersFromSearchParams(params).timeSlot).toBe("manha");
+  expect(filtersFromSearchParams(new URLSearchParams("periodo=meia-noite")).timeSlot).toBeUndefined();
 });

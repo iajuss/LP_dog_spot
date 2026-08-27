@@ -26,7 +26,7 @@ function mapSource(zone: Zone) {
 export function ApproximateMap({ zone, areaLabel }: ApproximateMapProps) {
   return (
     <section aria-label="Mapa aproximado" className="overflow-hidden rounded-3xl border border-emerald-950/10 bg-white p-5">
-      <div className="flex items-start justify-between gap-4"><div><p className="text-sm font-black text-emerald-950">Localização aproximada</p><p className="mt-1 text-sm text-emerald-950/70">{areaLabel}</p></div><span className="rounded-full bg-lime-100 px-3 py-1 text-xs font-bold text-emerald-900">Sem endereço</span></div>
+      <div><p className="text-sm font-black text-emerald-950">Localização aproximada</p><p className="mt-1 text-sm text-emerald-950/70">{areaLabel}</p></div>
       <iframe className="mt-5 h-64 w-full rounded-2xl border border-emerald-950/10" loading="lazy" src={mapSource(zone)} title={`Mapa interativo da região ${zone}`} />
       <p className="mt-4 text-xs leading-5 text-emerald-950/70">Explore a região no mapa. O marcador representa uma área aproximada e não o endereço do espaço.</p>
     </section>

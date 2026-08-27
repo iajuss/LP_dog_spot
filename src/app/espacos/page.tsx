@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLogo } from "@/components/brand-logo";
 import { EmptyResults } from "@/components/empty-results";
 import { FilterPanel } from "@/components/filter-panel";
 import { SpaceResults } from "@/components/space-results";
@@ -27,7 +28,7 @@ export default async function ResultsPage({ searchParams }: ResultsPageProps) {
   return (
     <main className="min-h-screen bg-[#f8f4eb] px-5 py-6 sm:px-8 lg:px-12">
       <header className="mx-auto flex max-w-7xl items-center justify-between">
-        <Link className="text-xl font-black tracking-tight text-emerald-950" href="/">Pátio Livre</Link>
+        <BrandLogo />
         <Link className="text-sm font-bold text-emerald-900 underline underline-offset-4" href={alertHref}>Quero ser avisado</Link>
       </header>
       <div className="mx-auto max-w-7xl py-10">
