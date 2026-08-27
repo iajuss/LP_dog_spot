@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 type ComboBoxProps = {
   label: string;
@@ -29,12 +29,21 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
   const listId = useId();
   const blurTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
+  // O fechamento por blur é adiado, então precisa ler o valor atual — e não o
+  // que existia quando o campo perdeu o foco — para não apagar a escolha.
+  const selectedRef = useRef(selected);
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
+
   const matches = useMemo(() => {
     if (!query.trim() || query === selected) return options;
     return options.filter((option) => normalize(option).includes(normalize(query)));
   }, [options, query, selected]);
 
   function choose(option: string) {
+    if (blurTimer.current) clearTimeout(blurTimer.current);
+    selectedRef.current = option;
     setSelected(option);
     setQuery(option);
     setIsOpen(false);
@@ -42,6 +51,8 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
   }
 
   function clear() {
+    if (blurTimer.current) clearTimeout(blurTimer.current);
+    selectedRef.current = "";
     setSelected("");
     setQuery("");
     setActiveIndex(-1);
@@ -68,7 +79,7 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
             // Espera o clique na opção acontecer antes de fechar a lista.
             blurTimer.current = setTimeout(() => {
               setIsOpen(false);
-              setQuery(selected);
+              setQuery(selectedRef.current);
             }, 120);
           }}
           onChange={(event) => {
@@ -96,7 +107,7 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
               }
             } else if (event.key === "Escape") {
               setIsOpen(false);
-              setQuery(selected);
+              setQuery(selectedRef.current);
             }
           }}
           placeholder={placeholder}
@@ -127,6 +138,15 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
             id={listId}
             role="listbox"
           >
+            <button
+              aria-selected={selected === ""}
+              className="block w-full rounded-xl px-3 py-2.5 text-left text-sm text-stone-600 transition hover:bg-lime-100"
+              onClick={clear}
+              role="option"
+              type="button"
+            >
+              {placeholder}
+            </button>
             {matches.length ? (
               matches.map((option, index) => (
                 <button

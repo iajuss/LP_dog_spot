@@ -73,3 +73,31 @@ test("parte do valor já escolhido quando existe", () => {
   expect(input).toHaveValue("Santana");
   expect(document.querySelector('input[name="bairro"]')).toHaveValue("Santana");
 });
+
+test("o bairro escolhido continua visível depois que o campo perde o foco", async () => {
+  const user = userEvent.setup();
+  const input = renderComboBox();
+
+  await user.click(input);
+  await user.click(screen.getByRole("option", { name: "Pinheiros" }));
+
+  // O fechamento por blur é adiado; ele não pode apagar a escolha recém-feita.
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  expect(input).toHaveValue("Pinheiros");
+  expect(document.querySelector('input[name="bairro"]')).toHaveValue("Pinheiros");
+});
+
+test("a lista oferece a opção de voltar para todos os bairros", async () => {
+  const user = userEvent.setup();
+  const input = renderComboBox("Santana");
+
+  await user.click(input);
+
+  const limpar = screen.getByRole("option", { name: "Todos os bairros" });
+  await user.click(limpar);
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  expect(document.querySelector('input[name="bairro"]')).toHaveValue("");
+  expect(input).toHaveValue("");
+});
