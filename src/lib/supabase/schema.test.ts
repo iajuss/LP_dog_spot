@@ -39,8 +39,23 @@ test("uma solicitação de reserva exige data e período no banco", () => {
   expect(schemaSql).toContain("interest_leads_reservation_requires_schedule");
 });
 
+/** A definição vigente da view é sempre a última do conjunto de migrações. */
+const currentDemandOverview = () =>
+  schemaSql.slice(schemaSql.lastIndexOf("create or replace view public.demand_overview"));
+
+test("demand_overview lista solicitações pendentes junto das confirmadas", () => {
+  expect(currentDemandOverview()).not.toContain("where status = 'confirmed'");
+});
+
+test("demand_overview continua restrita ao service_role", () => {
+  const view = currentDemandOverview();
+
+  expect(view).toContain("revoke all on public.demand_overview from anon, authenticated");
+  expect(view).toContain("grant select on public.demand_overview to service_role");
+});
+
 test("demand_overview expõe contato, origem, necessidade e status da solicitação", () => {
-  const view = schemaSql.slice(schemaSql.lastIndexOf("create or replace view public.demand_overview"));
+  const view = currentDemandOverview();
   const viewIdentifiers = identifiersIn(view);
 
   for (const column of [
