@@ -1,12 +1,10 @@
 import {
-  AMENITIES,
   CATALOG_NEIGHBORHOODS,
   DOG_SIZES,
   SPACES,
   TIME_SLOTS,
   USE_TYPES,
   ZONES,
-  type Amenity,
   type DogSize,
   type Space,
   type TimeSlot,
@@ -22,12 +20,10 @@ export type SearchFilters = {
   dogCount?: number;
   timeSlot?: TimeSlot;
   neighborhood?: string;
-  amenities: Amenity[];
 };
 
 export const EMPTY_FILTERS: SearchFilters = {
   query: "",
-  amenities: [],
 };
 
 const isOneOf = <T extends readonly string[]>(values: T, value: string | null): value is T[number] =>
@@ -48,8 +44,7 @@ export function applyFilters(spaces: Space[], filters: SearchFilters): Space[] {
       (!filters.dogSize || space.dogSizes.includes(filters.dogSize)) &&
       (!filters.dogCount || space.maxDogs >= filters.dogCount) &&
       (!filters.timeSlot || space.availableSlots.includes(filters.timeSlot)) &&
-      (!filters.neighborhood || space.neighborhood === filters.neighborhood) &&
-      filters.amenities.every((amenity) => space.amenities.includes(amenity))
+      (!filters.neighborhood || space.neighborhood === filters.neighborhood)
     );
   });
 }
@@ -64,7 +59,6 @@ export function filtersToSearchParams(filters: SearchFilters): URLSearchParams {
   if (filters.dogCount) params.set("caes", String(filters.dogCount));
   if (filters.timeSlot) params.set("periodo", filters.timeSlot);
   if (filters.neighborhood) params.set("bairro", filters.neighborhood);
-  if (filters.amenities.length) params.set("recursos", filters.amenities.join(","));
 
   return params;
 }
@@ -76,9 +70,6 @@ export function filtersFromSearchParams(params: URLSearchParams): SearchFilters 
   const rawDogCount = Number(params.get("caes"));
   const timeSlot = params.get("periodo");
   const neighborhood = params.get("bairro");
-  const amenities = (params.get("recursos") ?? "")
-    .split(",")
-    .filter((value): value is Amenity => isOneOf(AMENITIES, value));
 
   return {
     query: params.get("busca") ?? "",
@@ -88,8 +79,52 @@ export function filtersFromSearchParams(params: URLSearchParams): SearchFilters 
     dogCount: Number.isInteger(rawDogCount) && rawDogCount >= 1 && rawDogCount <= 8 ? rawDogCount : undefined,
     timeSlot: isOneOf(TIME_SLOTS, timeSlot) ? timeSlot : undefined,
     neighborhood: neighborhood && CATALOG_NEIGHBORHOODS.includes(neighborhood) ? neighborhood : undefined,
-    amenities,
   };
+}
+
+/**
+ * Ordem em que os filtros cedem quando nada bate: do detalhe ao essencial. A
+ * ocasião nunca cede — é o que o tutor veio procurar, e mostrar espaço que não
+ * atende àquela vertical seria trocar o pedido dele por outro.
+ */
+const RELAXABLE = [
+  { key: "query", label: "o texto da busca" },
+  { key: "timeSlot", label: "o período" },
+  { key: "dogCount", label: "a quantidade de cães" },
+  { key: "dogSize", label: "o porte" },
+  { key: "neighborhood", label: "o bairro" },
+  { key: "zone", label: "a zona" },
+] as const satisfies readonly { key: keyof SearchFilters; label: string }[];
+
+export type SearchResult = {
+  spaces: Space[];
+  /** Filtros que precisaram ser ignorados para haver resultado. */
+  relaxed: string[];
+};
+
+/**
+ * Busca sem beco sem saída: se a combinação exata não devolve nada, afrouxa um
+ * filtro de cada vez e para no primeiro que devolve espaço, dizendo o que
+ * ignorou. Chegar a uma lista vazia é onde o tutor desiste.
+ */
+export function searchSpaces(spaces: Space[], filters: SearchFilters): SearchResult {
+  const exact = applyFilters(spaces, filters);
+  if (exact.length) return { spaces: exact, relaxed: [] };
+
+  let current = filters;
+  const relaxed: string[] = [];
+
+  for (const { key, label } of RELAXABLE) {
+    if (key === "query" ? !current.query.trim() : current[key] === undefined) continue;
+
+    current = key === "query" ? { ...current, query: "" } : { ...current, [key]: undefined };
+    relaxed.push(label);
+
+    const matches = applyFilters(spaces, current);
+    if (matches.length) return { spaces: matches, relaxed };
+  }
+
+  return { spaces: [], relaxed };
 }
 
 export const DEFAULT_RESULTS = applyFilters(SPACES, EMPTY_FILTERS);

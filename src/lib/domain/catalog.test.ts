@@ -1,20 +1,30 @@
 import { CATALOG_NEIGHBORHOODS, OVERNIGHT_USES, SPACES, SPACE_TYPES, SP_NEIGHBORHOODS, USE_TYPES, USE_TYPE_LABELS, ZONES } from "./catalog";
 
-test("catálogo cobre São Paulo com trinta espaços e fotos únicas", () => {
-  expect(SPACES).toHaveLength(30);
-  expect(new Set(SPACES.map((space) => space.imageUrl)).size).toBe(30);
+test("catálogo cobre São Paulo com quarenta e dois espaços e fotos únicas", () => {
+  expect(SPACES).toHaveLength(42);
+  expect(new Set(SPACES.map((space) => space.imageUrl)).size).toBe(42);
 });
 
-test("toda zona da cidade tem pelo menos quatro espaços", () => {
+test("toda zona da cidade tem pelo menos oito espaços", () => {
   for (const zone of ZONES) {
-    expect(SPACES.filter((space) => space.zone === zone).length, `zona sem espaços suficientes: ${zone}`).toBeGreaterThanOrEqual(4);
+    expect(SPACES.filter((space) => space.zone === zone).length, `zona sem espaços suficientes: ${zone}`).toBeGreaterThanOrEqual(8);
   }
 });
 
-test("cada espaço declara em quais períodos recebe visita", () => {
+/**
+ * Um espaço que só abre num período, só aceita um cão ou serve a dois usos
+ * some do resultado assim que o tutor mexe em qualquer filtro. Piso de
+ * flexibilidade para que a busca continue devolvendo opção.
+ */
+test("nenhum espaço é restrito a ponto de sumir do resultado", () => {
   for (const space of SPACES) {
-    expect(space.availableSlots.length, `espaço sem período: ${space.slug}`).toBeGreaterThan(0);
+    expect(space.availableSlots.length, `período restrito demais: ${space.slug}`).toBeGreaterThanOrEqual(2);
+    expect(space.maxDogs, `capacidade restrita demais: ${space.slug}`).toBeGreaterThanOrEqual(2);
+    expect(space.allowedUses.length, `uso restrito demais: ${space.slug}`).toBeGreaterThanOrEqual(3);
   }
+
+  const emTodosOsPeriodos = SPACES.filter((space) => space.availableSlots.length === 3);
+  expect(emTodosOsPeriodos.length).toBeGreaterThan(SPACES.length / 2);
 });
 
 test("o catálogo mistura tipos de espaço diferentes", () => {
@@ -28,13 +38,9 @@ test("todo espaço aceita cães de qualquer porte", () => {
   }
 });
 
-test("todo espaço atende a pelo menos dois usos, e a maioria a três", () => {
-  for (const space of SPACES) {
-    expect(space.allowedUses.length, `uso restrito demais em ${space.slug}`).toBeGreaterThanOrEqual(2);
-  }
-
-  const comTresOuMais = SPACES.filter((space) => space.allowedUses.length >= 3);
-  expect(comTresOuMais.length).toBeGreaterThan(SPACES.length / 2);
+test("a maioria dos espaços atende a quatro ou mais ocasiões", () => {
+  const comQuatroOuMais = SPACES.filter((space) => space.allowedUses.length >= 4);
+  expect(comQuatroOuMais.length).toBeGreaterThan(SPACES.length * 0.75);
 });
 
 test("oferece também as ocasiões de estadia, não só de visita curta", () => {
@@ -51,10 +57,30 @@ test("toda vertical tem espaço em mais de uma zona, para comparar praças", () 
   }
 });
 
-test("toda zona atende a pelo menos quatro verticais", () => {
+/**
+ * A combinação praça + vertical é a primeira escolha de quem chega. Se alguma
+ * delas devolvesse zero, o tutor pararia no vazio logo no começo do fluxo.
+ */
+test("toda zona atende a todas as verticais", () => {
   for (const zone of ZONES) {
     const verticais = new Set(SPACES.filter((space) => space.zone === zone).flatMap((space) => space.allowedUses));
-    expect(verticais.size, `praça pobre em verticais: ${zone}`).toBeGreaterThanOrEqual(4);
+    for (const use of USE_TYPES) {
+      expect(verticais, `praça ${zone} sem a vertical ${use}`).toContain(use);
+    }
+  }
+});
+
+test("toda vertical acontece nos três períodos do dia", () => {
+  for (const use of USE_TYPES) {
+    const periodos = new Set(SPACES.filter((space) => space.allowedUses.includes(use)).flatMap((space) => space.availableSlots));
+    expect(periodos.size, `vertical presa a um horário: ${use}`).toBe(3);
+  }
+});
+
+test("toda vertical cabe em turma, não só em cão sozinho", () => {
+  for (const use of USE_TYPES) {
+    const capacidade = Math.max(...SPACES.filter((space) => space.allowedUses.includes(use)).map((space) => space.maxDogs));
+    expect(capacidade, `vertical sem espaço para mais de dois cães: ${use}`).toBeGreaterThanOrEqual(4);
   }
 });
 

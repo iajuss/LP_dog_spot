@@ -80,7 +80,7 @@ test("demand_overview expõe contato, origem, necessidade e status da solicitaç
 });
 
 test("rascunhos ficam em tabela própria, sem nenhum dado de contato", () => {
-  const drafts = schemaSql.slice(schemaSql.indexOf("create table public.request_drafts"));
+  const drafts = schemaSql.slice(schemaSql.search(/create table (if not exists )?public\.request_drafts/));
   const definition = drafts.slice(0, drafts.indexOf(");"));
 
   expect(definition).toContain("anonymous_session_id");
@@ -113,4 +113,19 @@ test("existe uma visão de praça por vertical, restrita ao service_role", () =>
     expect(ids, `coluna ausente: ${column}`).toContain(column);
   }
   expect(view).toContain("revoke all on public.demand_by_market from anon, authenticated");
+});
+
+/**
+ * As migrações são coladas à mão no SQL Editor do Supabase, sem histórico de
+ * quais já rodaram. Rodar de novo tem que ser inofensivo, senão o primeiro
+ * "already exists" interrompe o bloco e deixa o schema pela metade.
+ */
+test("criar tabela, índice e política é repetível sem quebrar no meio", () => {
+  const drafts = readFileSync(path.join(root, "supabase/migrations/202608270004_request_drafts.sql"), "utf8");
+
+  expect(drafts).toContain("create table if not exists public.request_drafts");
+  for (const index of ["request_drafts_recent_idx", "request_drafts_region_idx"]) {
+    expect(drafts, `índice não repetível: ${index}`).toContain(`create index if not exists ${index}`);
+  }
+  expect(drafts).toContain('drop policy if exists "service_role manages request drafts"');
 });

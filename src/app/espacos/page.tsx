@@ -2,8 +2,9 @@ import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import { EmptyResults } from "@/components/empty-results";
 import { FilterPanel } from "@/components/filter-panel";
+import { RelaxedNotice } from "@/components/relaxed-notice";
 import { SpaceResults } from "@/components/space-results";
-import { applyFilters, filtersFromSearchParams } from "@/lib/domain/filters";
+import { filtersFromSearchParams, searchSpaces } from "@/lib/domain/filters";
 import { SPACES } from "@/lib/domain/catalog";
 
 type ResultsPageProps = {
@@ -22,7 +23,7 @@ function toSearchParams(values: Record<string, string | string[] | undefined>) {
 export default async function ResultsPage({ searchParams }: ResultsPageProps) {
   const params = toSearchParams(await searchParams);
   const filters = filtersFromSearchParams(params);
-  const spaces = applyFilters(SPACES, filters);
+  const { spaces, relaxed } = searchSpaces(SPACES, filters);
   const alertHref = `/reservar?kind=availability_alert&${params.toString()}`;
 
   return (
@@ -39,6 +40,7 @@ export default async function ResultsPage({ searchParams }: ResultsPageProps) {
           <aside><FilterPanel filters={filters} /></aside>
           <section>
             <div className="mb-5 flex items-center justify-between"><p className="text-sm font-medium text-stone-600">{spaces.length} {spaces.length === 1 ? "espaço" : "espaços"}</p><Link className="text-sm font-bold text-emerald-900" href={alertHref}>Não achou? Quero ser avisado →</Link></div>
+            <RelaxedNotice filters={filters} relaxed={relaxed} />
             {spaces.length ? <SpaceResults filters={filters} spaces={spaces} /> : <EmptyResults filters={filters} />}
           </section>
         </div>

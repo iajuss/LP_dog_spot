@@ -2,7 +2,7 @@ export const FUNNEL_EVENTS = ["search_started", "filters_changed", "space_viewed
 export type FunnelEventName = (typeof FUNNEL_EVENTS)[number];
 export type FunnelEvent = { eventName: FunnelEventName; payload: Record<string, string | number | boolean>; createdAt: string };
 
-const allowedKeys = new Set(["zone", "useType", "dogSize", "dogCount", "amenitiesCount", "spaceSlug", "sourceKind", "utmSource", "utmMedium", "utmCampaign"]);
+const allowedKeys = new Set(["zone", "useType", "dogSize", "dogCount", "spaceSlug", "sourceKind", "utmSource", "utmMedium", "utmCampaign"]);
 
 export function buildFunnelEvent(name: FunnelEventName, context: Record<string, unknown>): FunnelEvent {
   const payload = Object.fromEntries(Object.entries(context).filter(([key, value]) => allowedKeys.has(key) && ["string", "number", "boolean"].includes(typeof value))) as FunnelEvent["payload"];

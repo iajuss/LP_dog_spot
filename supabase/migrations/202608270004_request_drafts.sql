@@ -6,7 +6,7 @@
 -- abordagem. Manter assim é o que separa análise de funil de contato sem
 -- autorização.
 
-create table public.request_drafts (
+create table if not exists public.request_drafts (
   id uuid primary key default gen_random_uuid(),
   anonymous_session_id text not null unique,
   request_kind public.request_kind not null default 'reservation_request',
@@ -27,10 +27,11 @@ create table public.request_drafts (
   updated_at timestamptz not null default now()
 );
 
-create index request_drafts_recent_idx on public.request_drafts (updated_at desc);
-create index request_drafts_region_idx on public.request_drafts (desired_zone, desired_neighborhood);
+create index if not exists request_drafts_recent_idx on public.request_drafts (updated_at desc);
+create index if not exists request_drafts_region_idx on public.request_drafts (desired_zone, desired_neighborhood);
 
 alter table public.request_drafts enable row level security;
+drop policy if exists "service_role manages request drafts" on public.request_drafts;
 create policy "service_role manages request drafts" on public.request_drafts
   for all to service_role using (true) with check (true);
 

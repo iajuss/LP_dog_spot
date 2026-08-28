@@ -1,6 +1,4 @@
 import {
-  AMENITIES,
-  AMENITY_LABELS,
   CATALOG_NEIGHBORHOODS,
   DOG_SIZES,
   DOG_SIZE_LABELS,
@@ -40,15 +38,6 @@ export function FilterPanel({ filters }: FilterPanelProps) {
         <StyledSelect label="Porte do cão" name="porte" options={DOG_SIZES.map((size) => ({ label: DOG_SIZE_LABELS[size], value: size }))} placeholder="Qualquer porte" value={filters.dogSize} />
         <StyledSelect label="Quantos cães?" name="caes" options={[1, 2, 3, 4, 5, 6, 7, 8].map((count) => ({ label: `${count} ${count === 1 ? "cão" : "cães"}`, value: String(count) }))} placeholder="Não importa" value={filters.dogCount ? String(filters.dogCount) : undefined} />
         <StyledSelect label="Período" name="periodo" options={TIME_SLOTS.map((slot) => ({ label: TIME_SLOT_LABELS[slot], value: slot }))} placeholder="Qualquer período" value={filters.timeSlot} />
-        <fieldset className="grid gap-2">
-          <legend className="text-sm font-medium text-emerald-950">Recursos desejados</legend>
-          {AMENITIES.map((amenity) => (
-            <label className="flex items-center gap-2 text-sm text-stone-600" key={amenity}>
-              <input defaultChecked={filters.amenities.includes(amenity)} name="recursos" type="checkbox" value={amenity} />
-              {AMENITY_LABELS[amenity]}
-            </label>
-          ))}
-        </fieldset>
         <button className="min-h-11 rounded-xl bg-emerald-950 px-4 py-3 text-sm font-bold text-white" type="submit">Aplicar filtros</button>
       </form>
     </details>
