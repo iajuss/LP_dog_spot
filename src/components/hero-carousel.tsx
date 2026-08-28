@@ -32,7 +32,7 @@ export function HeroCarousel({ slides = SLIDES }: { slides?: Slide[] }) {
 
   return (
     <>
-      <div aria-live="off" className="absolute inset-0">
+      <div aria-live="off" className="absolute inset-0 overflow-hidden">
         {slides.map((slide, index) => (
           <Image
             alt={slide.alt}

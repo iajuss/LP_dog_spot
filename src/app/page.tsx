@@ -10,8 +10,8 @@ const USE_ICONS = ["🌿", "🎾", "✨", "🐕"];
 
 export default function HomePage() {
   return (
-    <main className="overflow-hidden bg-[#f8f4eb] text-emerald-950">
-      <section className="relative flex min-h-[100svh] items-center overflow-hidden px-5 py-6 sm:px-8 lg:px-12">
+    <main className="overflow-x-clip bg-[#f8f4eb] text-emerald-950">
+      <section className="relative z-20 flex min-h-[100svh] items-center px-5 py-6 sm:px-8 lg:px-12">
         <HeroCarousel />
 
         <div className="relative z-10 mx-auto w-full max-w-6xl">
