@@ -27,7 +27,6 @@ export default async function SpaceDetailPage({ params }: SpaceDetailPageProps) 
     periodo: space.availableSlots[0],
   });
   const reserveHref = `/reservar?kind=reservation_request&${requestParams.toString()}`;
-  const alertHref = `/reservar?kind=availability_alert&${requestParams.toString()}`;
 
   return (
     <main className="min-h-screen bg-[#f8f4eb] px-5 py-6 sm:px-8 lg:px-12">
@@ -102,20 +101,6 @@ export default async function SpaceDetailPage({ params }: SpaceDetailPageProps) 
               href={reserveHref}
             >
               Reservar este espaço
-            </Link>
-          </section>
-
-          {/* Ação secundária: separada em outro cartão, com peso visual menor. */}
-          <section className="rounded-3xl border border-emerald-950/15 bg-white p-6">
-            <h2 className="text-base font-black text-emerald-950">Ainda não tem uma data?</h2>
-            <p className="mt-2 text-sm leading-6 text-stone-600">
-              Deixe seus dados e avisamos por e-mail quando este espaço abrir novos horários.
-            </p>
-            <Link
-              className="mt-2 inline-flex min-h-11 items-center text-sm font-bold text-emerald-900 underline underline-offset-4 hover:text-emerald-700"
-              href={alertHref}
-            >
-              Quero ser avisado
             </Link>
           </section>
         </aside>

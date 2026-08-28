@@ -1,29 +1,20 @@
 import { render, screen } from "@testing-library/react";
 import SpaceDetailPage from "./page";
 
-test("detalhe permite solicitar uma reserva e receber alertas", async () => {
+test("detalhe direciona somente para a solicitação de reserva", async () => {
   render(await SpaceDetailPage({ params: Promise.resolve({ slug: "quintal-da-praca" }) }));
 
   expect(screen.getByRole("link", { name: /reservar este espaço/i })).toBeInTheDocument();
-  expect(screen.getByRole("link", { name: /quero ser avisado/i })).toBeInTheDocument();
+  expect(screen.queryByRole("link", { name: /quero ser avisado/i })).not.toBeInTheDocument();
 });
 
-test("as duas ações levam a fluxos diferentes", async () => {
+test("a reserva mantém a explicação e o fluxo de solicitação", async () => {
   render(await SpaceDetailPage({ params: Promise.resolve({ slug: "quintal-da-praca" }) }));
 
   const reserve = screen.getByRole("link", { name: /reservar este espaço/i });
-  const alert = screen.getByRole("link", { name: /quero ser avisado/i });
 
   expect(reserve).toHaveAttribute("href", expect.stringContaining("kind=reservation_request"));
-  expect(alert).toHaveAttribute("href", expect.stringContaining("kind=availability_alert"));
-  expect(reserve.getAttribute("href")).not.toBe(alert.getAttribute("href"));
-});
-
-test("cada ação explica o que acontece depois", async () => {
-  render(await SpaceDetailPage({ params: Promise.resolve({ slug: "quintal-da-praca" }) }));
-
   expect(screen.getByText(/escolha a data e o período/i)).toBeInTheDocument();
-  expect(screen.getByText(/ainda não tem uma data/i)).toBeInTheDocument();
 });
 
 test("mostra o tipo de espaço e os períodos que ele recebe", async () => {
