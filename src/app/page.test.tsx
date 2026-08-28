@@ -8,8 +8,15 @@ test("a home abre pela pergunta da estadia, com hospedagem e pernoite na frente"
   expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/hospedagem e pernoite/i);
   expect(screen.getByRole("group", { name: /onde seu cão vai ficar/i })).toBeInTheDocument();
 
-  const radios = screen.getAllByRole("radio") as HTMLInputElement[];
-  expect(radios.map((radio) => radio.value)).toEqual(["hospedagem", "pernoite", "lazer"]);
+  const intents = screen
+    .getAllByRole("button")
+    .filter((option) => option.hasAttribute("aria-pressed"))
+    .map((option) => option.textContent);
+  expect(intents).toEqual([
+    expect.stringContaining("Hospedagem"),
+    expect.stringContaining("Pernoite"),
+    expect.stringContaining("Lazer"),
+  ]);
 });
 
 test("as ocasiões começam pelas estadias e cada uma leva para a busca filtrada", () => {

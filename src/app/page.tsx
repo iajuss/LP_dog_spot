@@ -20,7 +20,7 @@ const USE_ICONS: Record<UseType, string> = {
 export default function HomePage() {
   return (
     <main className="overflow-x-clip bg-[#f8f4eb] text-emerald-950">
-      <section className="relative z-20 flex min-h-[100svh] items-center px-5 py-6 sm:px-8 lg:px-12">
+      <section className="relative z-20 flex min-h-[100svh] items-center px-5 py-4 sm:px-8 sm:py-6 lg:px-12">
         <HeroCarousel />
 
         <div className="relative z-10 mx-auto w-full max-w-6xl">
@@ -34,20 +34,19 @@ export default function HomePage() {
             </Link>
           </nav>
 
-          <div className="mt-16 max-w-2xl pb-16 sm:mt-24 sm:pb-20">
-            <p className="mb-5 inline-flex rounded-full bg-lime-300 px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-emerald-950">
+          <div className="mt-6 max-w-2xl pb-6 sm:mt-12 sm:pb-12">
+            <p className="mb-3 inline-flex rounded-full bg-lime-300 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-emerald-950 sm:text-xs">
               Estadias para cães em São Paulo
             </p>
-            <h1 className="text-[2.6rem] font-black leading-[0.95] tracking-[-0.05em] text-white sm:text-6xl lg:text-7xl">
+            <h1 className="text-[1.95rem] font-black leading-[0.95] tracking-[-0.04em] text-white sm:text-4xl lg:text-5xl">
               Hospedagem e pernoite em casas que recebem seu cão.
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-emerald-50/90 sm:mt-6 sm:text-lg">
-              Jardim cercado, área coberta e canto de descanso — e, quando o programa é junto, espaços reservados
-              para vocês dois.
+            <p className="mt-3 max-w-xl text-sm leading-6 text-emerald-50/90 sm:mt-4 sm:text-base">
+              Jardim cercado, área coberta e canto de descanso — e espaços reservados para o programa junto.
             </p>
-            <div className="mt-7 rounded-[1.75rem] bg-lime-300 p-2 shadow-2xl shadow-black/20 sm:mt-8 sm:rounded-[2rem]">
+            <div className="mt-5 rounded-[1.5rem] bg-lime-300 p-1.5 shadow-2xl shadow-black/20 sm:mt-6 sm:rounded-[1.75rem]">
               <LocationSearch />
-              <p className="px-4 pb-3 pt-2 text-xs font-medium text-emerald-950/70">
+              <p className="px-3 pb-2 pt-1.5 text-[0.7rem] font-medium text-emerald-950/70">
                 Escolha a estadia e a região — dá para digitar o bairro ou a zona.
               </p>
             </div>
@@ -58,7 +57,7 @@ export default function HomePage() {
       <FeaturedSpaces />
 
       {/* Seção 2 do corpo: verde sólido, o contraste forte do meio da página. */}
-      <section className="flex min-h-[100svh] flex-col justify-center bg-emerald-950 px-5 py-20 sm:px-8 lg:px-12">
+      <section className="flex min-h-[100svh] flex-col justify-center bg-emerald-950 px-5 py-12 sm:px-8 sm:py-20 lg:px-12">
         <div className="mx-auto w-full max-w-6xl">
           <header className="max-w-2xl">
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-lime-300">Cada rotina tem um ritmo</p>
@@ -77,11 +76,11 @@ export default function HomePage() {
                 href={`/espacos?uso=${useType}`}
                 key={useType}
               >
-                <span className="text-2xl">{USE_ICONS[useType]}</span>
-                <h3 className="mt-6 text-base font-black leading-tight text-white transition group-hover:text-lime-300 sm:mt-8 sm:text-lg">
+                <span className="text-xl sm:text-2xl">{USE_ICONS[useType]}</span>
+                <h3 className="mt-4 text-sm font-black leading-tight text-white transition group-hover:text-lime-300 sm:mt-8 sm:text-lg">
                   {USE_TYPE_LABELS[useType]}
                 </h3>
-                <p className="mt-1 text-sm text-emerald-100/70">Veja espaços na sua região.</p>
+                <p className="mt-1 text-xs text-emerald-100/70 sm:text-sm">Veja espaços na sua região.</p>
               </Link>
             ))}
           </div>

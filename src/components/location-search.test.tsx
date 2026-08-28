@@ -3,7 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { LocationSearch } from "./location-search";
 
 const field = () => screen.getByRole("combobox", { name: /bairro ou zona/i });
-const submitted = () => document.querySelector('form input[type="hidden"]') as HTMLInputElement;
+/** O campo escondido que a busca de local envia — o da intenção fica de fora. */
+const submitted = () =>
+  document.querySelector('form input[type="hidden"]:not([name="intencao"])') as HTMLInputElement;
 
 beforeEach(() => {
   render(<LocationSearch />);
@@ -53,7 +55,7 @@ test("o formulário leva para o catálogo", () => {
 test("a busca da home sai com a intenção escolhida", async () => {
   const user = userEvent.setup();
 
-  await user.click(screen.getByRole("radio", { name: /pernoite/i }));
+  await user.click(screen.getByRole("button", { name: /pernoite/i }));
   await user.click(field());
   await user.click(screen.getByRole("option", { name: "Pinheiros" }));
 
@@ -63,4 +65,16 @@ test("a busca da home sai com a intenção escolhida", async () => {
   expect(data.get("intencao")).toBe("pernoite");
   expect(data.get("bairro")).toBe("Pinheiros");
   expect(form).toHaveAttribute("action", "/espacos");
+});
+
+test("dá para buscar só pela região, sem escolher intenção", async () => {
+  const user = userEvent.setup();
+
+  await user.click(field());
+  await user.click(screen.getByRole("option", { name: "Pinheiros" }));
+
+  const data = new FormData(document.querySelector("form") as HTMLFormElement);
+
+  expect(data.get("intencao")).toBeNull();
+  expect(data.get("bairro")).toBe("Pinheiros");
 });

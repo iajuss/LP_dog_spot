@@ -43,7 +43,7 @@ const QUESTIONS = [
 /** Seção 3 do corpo: branco limpo, para a leitura das respostas. */
 export function FaqSection() {
   return (
-    <section className="flex min-h-[100svh] flex-col justify-center bg-white px-5 py-20 sm:px-8 lg:px-12">
+    <section className="flex min-h-[100svh] flex-col justify-center bg-white px-5 py-12 sm:px-8 sm:py-20 lg:px-12">
       <div className="mx-auto w-full max-w-3xl">
         <header>
           <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">Tire suas dúvidas</p>

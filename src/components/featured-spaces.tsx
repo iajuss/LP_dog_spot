@@ -5,7 +5,7 @@ import { FEATURED_SPACES, SPACES, SPACE_TYPE_LABELS, STAY_FEATURE_LABELS } from 
 /** Seção 1 do corpo: creme quente, a cor base da marca. */
 export function FeaturedSpaces() {
   return (
-    <section className="flex min-h-[100svh] flex-col justify-center bg-[#f8f4eb] px-5 py-20 sm:px-8 lg:px-12">
+    <section className="flex min-h-[100svh] flex-col justify-center bg-[#f8f4eb] px-5 py-12 sm:px-8 sm:py-20 lg:px-12">
       <div className="mx-auto w-full max-w-6xl">
         {/* 1. Cabeçalho da seção */}
         <header className="max-w-2xl">
