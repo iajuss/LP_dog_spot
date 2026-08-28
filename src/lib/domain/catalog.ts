@@ -12,6 +12,18 @@ export const DOG_SIZES = ["pequeno", "medio", "grande"] as const;
 export const AMENITIES = ["cercado", "gramado", "agua", "sombra", "agility"] as const;
 export const TIME_SLOTS = ["manha", "tarde", "noite"] as const;
 export const SPACE_TYPES = ["quintal", "campo", "salao", "agility", "piscina", "terraco"] as const;
+/**
+ * Sinais opcionais de acolhimento. Ficam fora de `AMENITIES` de propósito:
+ * amenidade descreve o espaço, isto descreve como a casa recebe o cão. Nenhum
+ * registro é obrigado a ter todos — o card usa só o que existe.
+ */
+export const STAY_FEATURES = [
+  "ambiente-interno",
+  "area-coberta",
+  "jardim-cercado",
+  "canto-de-descanso",
+  "acompanhamento-noturno",
+] as const;
 
 export type Zone = (typeof ZONES)[number];
 export type UseType = (typeof USE_TYPES)[number];
@@ -19,6 +31,7 @@ export type DogSize = (typeof DOG_SIZES)[number];
 export type Amenity = (typeof AMENITIES)[number];
 export type TimeSlot = (typeof TIME_SLOTS)[number];
 export type SpaceType = (typeof SPACE_TYPES)[number];
+export type StayFeature = (typeof STAY_FEATURES)[number];
 
 export type Space = {
   slug: string;
@@ -37,6 +50,10 @@ export type Space = {
   imageUrl: string;
   imageAlt: string;
   description: string;
+  /** Sinais de acolhimento, quando o espaço recebe para estadia. Opcional. */
+  stayFeatures?: StayFeature[];
+  /** Como é a rotina de acolhimento, em uma frase. Opcional. */
+  stayNote?: string;
 };
 
 export const AMENITY_LABELS: Record<Amenity, string> = {
@@ -81,6 +98,14 @@ export const SPACE_TYPE_LABELS: Record<SpaceType, string> = {
   terraco: "Terraço",
 };
 
+export const STAY_FEATURE_LABELS: Record<StayFeature, string> = {
+  "ambiente-interno": "Ambiente interno",
+  "area-coberta": "Área coberta",
+  "jardim-cercado": "Jardim cercado",
+  "canto-de-descanso": "Canto de descanso",
+  "acompanhamento-noturno": "Acompanhamento à noite",
+};
+
 const photo = (id: string) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1200&q=85`;
 
 export const SPACES: Space[] = [
@@ -101,6 +126,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1594498653385-d5172c532c00"),
     imageAlt: "Quintal gramado cercado por vegetação",
     description: "Quintal compacto para rotinas de treino e passeio no meio da cidade.",
+    stayFeatures: ["canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Recebe até três cães por noite, cada um com o mesmo canto de descanso reservado.",
   },
   {
     slug: "terraco-bela-vista",
@@ -118,6 +145,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1624018171446-c4f0b942cf87"),
     imageAlt: "Terraço com jardim e canteiros floridos",
     description: "Terraço abrigado para encontros calmos com cães pequenos.",
+    stayFeatures: ["area-coberta", "canto-de-descanso"],
+    stayNote: "Terraço abrigado da chuva e do vento, com cama e água ao alcance durante a noite.",
   },
   {
     slug: "jardim-da-consolacao",
@@ -135,6 +164,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1778683326192-898fc982e6a6"),
     imageAlt: "Jardim cercado por muro de madeira",
     description: "Jardim reservado, bom para os primeiros encontros entre cães.",
+    stayFeatures: ["jardim-cercado", "canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Jardim fechado para um grupo pequeno, com rotina calma de manhã e à noite.",
   },
   {
     slug: "salao-da-liberdade",
@@ -152,6 +183,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1538307602205-80b5c2ff26ec"),
     imageAlt: "Área externa com mesas e piso coberto",
     description: "Salão coberto que resolve o dia de chuva sem cancelar o treino.",
+    stayFeatures: ["ambiente-interno", "area-coberta", "canto-de-descanso"],
+    stayNote: "Estadia toda em ambiente interno, com o mesmo lugar de descanso a cada noite.",
   },
   {
     slug: "quintal-higienopolis",
@@ -167,8 +200,10 @@ export const SPACES: Space[] = [
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["gramado", "sombra"],
     imageUrl: photo("1596481768453-8befafc2d7ae"),
-    imageAlt: "Jardim denso com caminho de pedras",
-    description: "Espaço tranquilo para um cão de cada vez, sem outros por perto.",
+    imageAlt: "Jardim de casa com caminho de pedras entre a vegetação",
+    description: "Jardim de casa reservado, para um cão de cada vez e sem outros por perto.",
+    stayFeatures: ["canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Recebe um cão de cada vez, sem outros por perto, do primeiro dia ao fim da estadia.",
   },
   {
     slug: "deck-da-republica",
@@ -183,8 +218,8 @@ export const SPACES: Space[] = [
     maxDogs: 4,
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["cercado", "agua", "sombra"],
-    imageUrl: photo("1719324924230-63781a3f18b9"),
-    imageAlt: "Quintal com gramado e casa ao fundo",
+    imageUrl: photo("1561283890-5d858c23b2ea"),
+    imageAlt: "Campo gramado aberto sob céu limpo",
     description: "Deck cercado para fim de tarde com outros tutores.",
   },
 
@@ -204,6 +239,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1681853108586-f29b4ef5c0fb"),
     imageAlt: "Quintal gramado cercado, com casas ao fundo",
     description: "Quintal fechado nos quatro lados, com grama baixa e portão único.",
+    stayFeatures: ["jardim-cercado", "canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Quintal fechado nos quatro lados e com portão único: saída e volta sempre acompanhadas.",
   },
   {
     slug: "patio-do-cambuci",
@@ -218,8 +255,8 @@ export const SPACES: Space[] = [
     maxDogs: 5,
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["cercado", "sombra", "agua"],
-    imageUrl: photo("1780838446281-9394772d07a8"),
-    imageAlt: "Pátio circular de pedra rodeado por vegetação",
+    imageUrl: photo("1514373941175-0a141072bbc8"),
+    imageAlt: "Campo gramado com banco e árvores",
     description: "Pátio calçado e cercado por muretas, bom para grupo pequeno.",
   },
   // Norte
@@ -256,6 +293,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1715934514075-06f0dbda1c09"),
     imageAlt: "Quintal cercado com grama e muro claro",
     description: "Pátio tranquilo para encontros e passeios sem pressa.",
+    stayFeatures: ["canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Rotina sem pressa, com pátio à sombra de dia e canto reservado para dormir.",
   },
   {
     slug: "gramado-casa-verde",
@@ -287,8 +326,8 @@ export const SPACES: Space[] = [
     maxDogs: 5,
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["cercado", "gramado", "agility", "agua"],
-    imageUrl: photo("1705980505348-222bc8724138"),
-    imageAlt: "Área externa com piso e mobiliário de jardim",
+    imageUrl: photo("1608200765700-ba7ff78b6dd0"),
+    imageAlt: "Caminho de parque com cães ao fundo",
     description: "Circuito montado para treino de obstáculos, com foco em uma dupla por vez.",
   },
   {
@@ -321,9 +360,11 @@ export const SPACES: Space[] = [
     maxDogs: 3,
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["cercado", "gramado", "sombra"],
-    imageUrl: photo("1561283890-5d858c23b2ea"),
-    imageAlt: "Campo gramado aberto sob céu limpo",
+    imageUrl: photo("1719324924230-63781a3f18b9"),
+    imageAlt: "Quintal com gramado e casa ao fundo",
     description: "Quintal cercado e reservado para cães pequenos.",
+    stayFeatures: ["jardim-cercado", "canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Estadia pensada para cães pequenos, em quintal cercado e sem circulação de fora.",
   },
 
   {
@@ -359,6 +400,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1576897955702-24ad19680db3"),
     imageAlt: "Jardim com caminho de grama entre canteiros e uma casa",
     description: "Jardim de casa com caminho gramado, sombra e área coberta para dormir.",
+    stayFeatures: ["jardim-cercado", "area-coberta", "ambiente-interno", "canto-de-descanso"],
+    stayNote: "Jardim de casa durante o dia e área coberta para dormir, na mesma rotina todas as noites.",
   },
   // Sul
   {
@@ -377,6 +420,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1602684379319-1de467ca74e5"),
     imageAlt: "Gramado cercado com árvores ao redor",
     description: "Jardim tranquilo para encontros em ritmo leve.",
+    stayFeatures: ["canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Ritmo leve o dia inteiro, com sombra à tarde e um canto só para o descanso.",
   },
   {
     slug: "gramado-do-vale",
@@ -408,8 +453,8 @@ export const SPACES: Space[] = [
     maxDogs: 4,
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["cercado", "gramado", "sombra"],
-    imageUrl: photo("1608200765700-ba7ff78b6dd0"),
-    imageAlt: "Caminho de parque com cães ao fundo",
+    imageUrl: photo("1705980505348-222bc8724138"),
+    imageAlt: "Área externa com piso e mobiliário de jardim",
     description: "Recanto arejado para a rotina de fim de tarde.",
   },
   {
@@ -462,6 +507,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1667230228326-c881966e2a29"),
     imageAlt: "Cães brincando em área cercada",
     description: "Pátio cercado para treino de cães maiores, sem plateia.",
+    stayFeatures: ["jardim-cercado", "ambiente-interno", "canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Cães maiores ficam com espaço próprio, entre o pátio cercado e o ambiente interno.",
   },
 
   {
@@ -480,6 +527,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1777115617638-5373f021de4f"),
     imageAlt: "Gramado amplo com árvore grande ao lado de casa de tijolos",
     description: "Terreno gramado grande ao lado da casa, com cerca em toda a volta.",
+    stayFeatures: ["jardim-cercado", "ambiente-interno", "canto-de-descanso"],
+    stayNote: "Terreno cercado ao lado da casa, com entrada para o ambiente interno quando o dia esquenta.",
   },
   {
     slug: "deck-do-brooklin",
@@ -497,6 +546,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1766603636766-1f4662469448"),
     imageAlt: "Deck de madeira coberto, cercado de plantas",
     description: "Deck coberto e fechado, com sombra o dia inteiro e piso antiderrapante.",
+    stayFeatures: ["area-coberta", "canto-de-descanso"],
+    stayNote: "Deck coberto e fechado, com piso antiderrapante e lugar de descanso na sombra.",
   },
   {
     slug: "campo-de-interlagos",
@@ -511,8 +562,8 @@ export const SPACES: Space[] = [
     maxDogs: 8,
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["gramado", "agua", "sombra", "agility"],
-    imageUrl: photo("1592012428012-ba9d1cf9ad98"),
-    imageAlt: "Gramado sob árvore grande, com cerca de madeira ao fundo",
+    imageUrl: photo("1558385952-504347abdceb"),
+    imageAlt: "Pessoas e cães em gramado de parque",
     description: "Campo com árvores altas e cerca de madeira, bom para correr solto.",
   },
   // Leste
@@ -529,9 +580,11 @@ export const SPACES: Space[] = [
     maxDogs: 4,
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["cercado", "gramado", "agua"],
-    imageUrl: photo("1558385952-504347abdceb"),
-    imageAlt: "Pessoas e cães em gramado de parque",
+    imageUrl: photo("1592012428012-ba9d1cf9ad98"),
+    imageAlt: "Gramado sob árvore grande, com cerca de madeira ao fundo",
     description: "Espaço aberto para cães que gostam de companhia.",
+    stayFeatures: ["jardim-cercado", "ambiente-interno", "canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Boa estadia para cão que gosta de companhia: dia no gramado cercado, noite em lugar fixo.",
   },
   {
     slug: "jardim-do-arco",
@@ -563,9 +616,11 @@ export const SPACES: Space[] = [
     maxDogs: 6,
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["cercado", "agua", "agility"],
-    imageUrl: photo("1514373941175-0a141072bbc8"),
-    imageAlt: "Campo gramado com banco e árvores",
+    imageUrl: photo("1780838446281-9394772d07a8"),
+    imageAlt: "Pátio circular de pedra rodeado por vegetação",
     description: "Galpão coberto e cercado, útil quando o tempo fecha.",
+    stayFeatures: ["ambiente-interno", "area-coberta", "canto-de-descanso"],
+    stayNote: "Estadia coberta de ponta a ponta, sem depender do tempo lá fora.",
   },
   {
     slug: "campo-da-penha",
@@ -617,6 +672,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1512134687100-628ef82e6626"),
     imageAlt: "Gramado verde com árvores ao redor",
     description: "Terraço cercado, bom para cães pequenos e tímidos.",
+    stayFeatures: ["area-coberta", "canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Terraço cercado e tranquilo, com rotina curta de saídas para cães mais tímidos.",
   },
 
   {
@@ -633,8 +690,10 @@ export const SPACES: Space[] = [
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["cercado", "gramado", "agua", "sombra"],
     imageUrl: photo("1621271654319-5e78a0f48756"),
-    imageAlt: "Gramado com árvore e cerca de ferro no fim do dia",
+    imageAlt: "Quintal gramado de casa com árvore e cerca alta no fim do dia",
     description: "Quintal gramado com cerca alta e um canto coberto para descanso.",
+    stayFeatures: ["jardim-cercado", "area-coberta", "canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Quintal gramado de dia e canto coberto à noite, com cerca alta em toda a volta.",
   },
   {
     slug: "salao-vila-prudente",
@@ -652,6 +711,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1771909719482-4f95e62f41a7"),
     imageAlt: "Salão coberto amplo com piso emborrachado",
     description: "Salão fechado e climatizado, aberto mesmo em dia de chuva.",
+    stayFeatures: ["ambiente-interno", "area-coberta", "canto-de-descanso"],
+    stayNote: "Salão fechado e climatizado, com espaço separado para o descanso de cada cão.",
   },
   // Oeste
   {
@@ -670,6 +731,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1569203685368-118435c389dd"),
     imageAlt: "Cães correndo em gramado cercado",
     description: "Área ampla e cercada para treinar com espaço e foco.",
+    stayFeatures: ["jardim-cercado", "canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Recebe poucos cães por vez, com área cercada de dia e lugar reservado para a noite.",
   },
   {
     slug: "bosque-claro",
@@ -702,8 +765,10 @@ export const SPACES: Space[] = [
     availableSlots: ["manha", "tarde", "noite"],
     amenities: ["cercado", "gramado", "agua", "agility"],
     imageUrl: photo("1758208137355-223fa672cbe2"),
-    imageAlt: "Quintal com gramado e cerca alta",
-    description: "Quintal amplo para encontros com mais energia.",
+    imageAlt: "Quintal de casa com gramado e cerca alta em toda a volta",
+    description: "Quintal amplo de casa, fechado por cerca alta em toda a volta.",
+    stayFeatures: ["jardim-cercado", "ambiente-interno", "canto-de-descanso"],
+    stayNote: "Quintal amplo de casa, com acesso ao ambiente interno e cantos de descanso separados.",
   },
   {
     slug: "piscina-das-perdizes",
@@ -738,6 +803,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1786654026603-54c654c05c18"),
     imageAlt: "Terraço com gramado e guarda-sol",
     description: "Pátio pequeno e reservado, no ritmo de quem quer sossego.",
+    stayFeatures: ["area-coberta", "canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Pátio pequeno e reservado, no sossego de quem prefere pouco movimento.",
   },
   {
     slug: "arena-da-lapa",
@@ -772,6 +839,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1729058015948-592a8e4a1772"),
     imageAlt: "Grama alta iluminada pelo sol junto a uma cerca de madeira",
     description: "Gramado macio, cercado por tapume de madeira em toda a volta.",
+    stayFeatures: ["jardim-cercado", "canto-de-descanso", "acompanhamento-noturno"],
+    stayNote: "Gramado macio fechado por tapume em toda a volta, com rotina fixa de descanso.",
   },
   {
     slug: "terraco-do-sumare",
@@ -806,6 +875,8 @@ export const SPACES: Space[] = [
     imageUrl: photo("1655109371498-30745747d279"),
     imageAlt: "Pátio calçado com casinha de madeira e canteiros",
     description: "Pátio de piso liso com casinha de madeira, fácil de limpar.",
+    stayFeatures: ["area-coberta", "canto-de-descanso"],
+    stayNote: "Casinha de madeira abrigada no pátio, de piso liso e fácil de manter limpo.",
   },
 ];
 
@@ -835,13 +906,13 @@ export function getSpaceBySlug(slug: string): Space | undefined {
   return SPACES.find((space) => space.slug === slug);
 }
 
-/** Atalhos da home: um espaço marcante por zona. */
+/** Atalhos da home: uma casa que recebe para estadia em cada zona. */
 export const FEATURED_SLUGS = [
-  "campo-belo-aberto",
-  "quintal-da-praca",
-  "galpao-da-mooca",
-  "arena-vila-guilherme",
-  "terraco-bela-vista",
+  "quintal-higienopolis",
+  "casa-do-tremembe",
+  "quintal-do-jabaquara",
+  "quintal-de-itaquera",
+  "casa-da-serra",
 ] as const;
 
 export const FEATURED_SPACES: Space[] = FEATURED_SLUGS.map((slug) => {

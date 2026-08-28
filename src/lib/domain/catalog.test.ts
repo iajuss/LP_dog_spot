@@ -1,4 +1,16 @@
-import { CATALOG_NEIGHBORHOODS, OVERNIGHT_USES, SPACES, SPACE_TYPES, SP_NEIGHBORHOODS, USE_TYPES, USE_TYPE_LABELS, ZONES } from "./catalog";
+import {
+  CATALOG_NEIGHBORHOODS,
+  FEATURED_SPACES,
+  OVERNIGHT_USES,
+  SPACES,
+  SPACE_TYPES,
+  SP_NEIGHBORHOODS,
+  STAY_FEATURES,
+  STAY_FEATURE_LABELS,
+  USE_TYPES,
+  USE_TYPE_LABELS,
+  ZONES,
+} from "./catalog";
 
 test("catálogo cobre São Paulo com quarenta e dois espaços e fotos únicas", () => {
   expect(SPACES).toHaveLength(42);
@@ -129,4 +141,73 @@ test("a lista do formulário cobre bairros além dos que já têm espaço", () =
   for (const neighborhood of CATALOG_NEIGHBORHOODS) expect(SP_NEIGHBORHOODS).toContain(neighborhood);
   expect(SP_NEIGHBORHOODS.length).toBeGreaterThan(CATALOG_NEIGHBORHOODS.length);
   expect(SP_NEIGHBORHOODS.length).toBe(new Set(SP_NEIGHBORHOODS).size);
+});
+
+test("os sinais de acolhimento têm rótulo próprio", () => {
+  expect(STAY_FEATURES.length).toBeGreaterThanOrEqual(4);
+  for (const feature of STAY_FEATURES) {
+    expect(STAY_FEATURE_LABELS[feature], `rótulo ausente: ${feature}`).toBeTruthy();
+  }
+});
+
+test("os metadados de estadia são opcionais e só existem em espaço que recebe estadia", () => {
+  const comMetadado = SPACES.filter((space) => space.stayFeatures?.length);
+  const semMetadado = SPACES.filter((space) => !space.stayFeatures?.length);
+
+  expect(comMetadado.length).toBeGreaterThanOrEqual(10);
+  // A ausência precisa continuar existindo: o card não pode depender do dado.
+  expect(semMetadado.length).toBeGreaterThan(0);
+
+  for (const space of SPACES) {
+    for (const feature of space.stayFeatures ?? []) {
+      expect(STAY_FEATURES, `sinal desconhecido em ${space.slug}`).toContain(feature);
+    }
+    if (space.stayFeatures?.length || space.stayNote) {
+      expect(
+        space.allowedUses.some((use) => OVERNIGHT_USES.includes(use)),
+        `sinal de estadia em espaço que não recebe estadia: ${space.slug}`,
+      ).toBe(true);
+    }
+  }
+});
+
+test("todo espaço de hospedagem descreve como acolhe", () => {
+  for (const space of SPACES.filter((s) => s.allowedUses.includes("hospedagem"))) {
+    expect(space.stayFeatures?.length, `hospedagem sem sinais: ${space.slug}`).toBeGreaterThanOrEqual(2);
+    expect(space.stayNote, `hospedagem sem rotina de acolhimento: ${space.slug}`).toBeTruthy();
+  }
+});
+
+test("os destaques da home são casas que recebem para estadia", () => {
+  expect(FEATURED_SPACES.length).toBeGreaterThanOrEqual(4);
+  for (const space of FEATURED_SPACES) {
+    expect(space.allowedUses, `destaque sem hospedagem: ${space.slug}`).toContain("hospedagem");
+    expect(["quintal", "salao", "terraco"], `destaque em espaço aberto: ${space.slug}`).toContain(space.spaceType);
+    expect(`${space.name} ${space.imageAlt} ${space.description}`.toLowerCase()).not.toMatch(
+      /campo|parque|chácara|bosque/,
+    );
+  }
+  expect(new Set(FEATURED_SPACES.map((space) => space.zone)).size).toBeGreaterThanOrEqual(4);
+});
+
+/**
+ * A confiança vem do espaço, não de quem aparece na foto. O catálogo de
+ * apresentação ainda tem uma imagem de lazer com pessoas, à espera de uma
+ * substituta: a estadia, que é o cerne do produto, não mostra nenhuma.
+ */
+test("nenhuma imagem de espaço de estadia mostra pessoas", () => {
+  for (const space of SPACES) {
+    if (!space.allowedUses.some((use) => OVERNIGHT_USES.includes(use))) continue;
+    expect(space.imageAlt.toLowerCase(), `foto com pessoas: ${space.slug}`).not.toMatch(
+      /pessoa|tutor|homem|mulher|crian|famíli/,
+    );
+  }
+});
+
+test("espaço que recebe estadia não se apresenta como campo ou parque", () => {
+  for (const space of SPACES) {
+    if (!space.allowedUses.some((use) => OVERNIGHT_USES.includes(use))) continue;
+    expect(`${space.imageAlt} ${space.description}`.toLowerCase(), `estadia vendida como área aberta: ${space.slug}`)
+      .not.toMatch(/campo|parque|chácara|bosque/);
+  }
 });
