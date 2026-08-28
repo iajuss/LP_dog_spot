@@ -1,8 +1,18 @@
 const QUESTIONS = [
   {
-    question: "Como funciona a reserva?",
+    question: "Como funciona uma hospedagem?",
     answer:
-      "Você escolhe um espaço, envia sua solicitação com data e período e confirma seu e-mail pelo link que enviamos. Nossa equipe confirma a disponibilidade e os detalhes finais com você antes da visita.",
+      "Você escolhe a casa, envia a solicitação com as datas e confirma seu e-mail pelo link que enviamos. Nossa equipe confirma a disponibilidade e combina a rotina do seu cão antes de a estadia começar.",
+  },
+  {
+    question: "Pernoite e hospedagem são a mesma coisa?",
+    answer:
+      "Pernoite é uma noite fora; hospedagem são vários dias seguidos. Cada espaço informa quais ocasiões recebe, e muitos atendem as duas.",
+  },
+  {
+    question: "E para passar um tempo junto com o cão?",
+    answer:
+      "É a opção de lazer: você reserva o espaço para usar junto com ele, em um passeio, uma brincadeira ou um treino. O pedido segue o mesmo caminho da estadia.",
   },
   {
     question: "Por que preciso confirmar meu e-mail?",

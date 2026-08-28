@@ -51,3 +51,16 @@ test("ignora parâmetros fora das listas conhecidas", async () => {
 
   expect(document.querySelector('input[name="desiredNeighborhood"]')).toHaveValue("");
 });
+
+test("a solicitação de hospedagem se apresenta como estadia", async () => {
+  render(await ReservationPage({ searchParams: Promise.resolve({ kind: "reservation_request", uso: "hospedagem" }) }));
+
+  expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/estadia/i);
+  expect(screen.getByText(/confirme seu e-mail/i)).toBeInTheDocument();
+});
+
+test("a solicitação de lazer continua falando de usar o espaço", async () => {
+  render(await ReservationPage({ searchParams: Promise.resolve({ kind: "reservation_request", uso: "brincadeira" }) }));
+
+  expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/melhor momento/i);
+});
