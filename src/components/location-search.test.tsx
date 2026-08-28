@@ -47,5 +47,20 @@ test("escolher uma zona busca por zona", async () => {
 
 test("o formulário leva para o catálogo", () => {
   expect(document.querySelector("form")).toHaveAttribute("action", "/espacos");
-  expect(screen.getByRole("button", { name: /explorar/i })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: /buscar/i })).toBeInTheDocument();
+});
+
+test("a busca da home sai com a intenção escolhida", async () => {
+  const user = userEvent.setup();
+
+  await user.click(screen.getByRole("radio", { name: /pernoite/i }));
+  await user.click(field());
+  await user.click(screen.getByRole("option", { name: "Pinheiros" }));
+
+  const form = document.querySelector("form") as HTMLFormElement;
+  const data = new FormData(form);
+
+  expect(data.get("intencao")).toBe("pernoite");
+  expect(data.get("bairro")).toBe("Pinheiros");
+  expect(form).toHaveAttribute("action", "/espacos");
 });

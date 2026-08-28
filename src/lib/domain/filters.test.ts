@@ -1,5 +1,6 @@
 import { CATALOG_NEIGHBORHOODS, DOG_SIZES, SPACES, TIME_SLOTS, USE_TYPES, ZONES } from "./catalog";
 import { applyFilters, filtersFromSearchParams, filtersToSearchParams, searchSpaces } from "./filters";
+import { LEISURE_USES } from "./stay";
 
 test("combina zona, uso, porte e quantidade de cães", () => {
   const matches = applyFilters(SPACES, {
@@ -163,4 +164,73 @@ test("nenhum bairro do painel termina sem espaço, em nenhuma ocasião", () => {
   }
 
   expect(vazios).toEqual([]);
+});
+
+test("a home manda hospedagem como intenção e o uso chega pré-selecionado", () => {
+  const filters = filtersFromSearchParams(new URLSearchParams("intencao=hospedagem&zona=Sul"));
+
+  expect(filters.useType).toBe("hospedagem");
+  expect(filters.stayIntent).toBe("hospedagem");
+  expect(filtersToSearchParams(filters).get("uso")).toBe("hospedagem");
+});
+
+test("pernoite chega da home do mesmo jeito", () => {
+  const filters = filtersFromSearchParams(new URLSearchParams("intencao=pernoite"));
+
+  expect(filters.useType).toBe("pernoite");
+  expect(filters.stayIntent).toBe("pernoite");
+});
+
+test("lazer filtra pelas ocasiões de visita sem prender um uso só", () => {
+  const filters = filtersFromSearchParams(new URLSearchParams("intencao=lazer"));
+
+  expect(filters.useType).toBeUndefined();
+  expect(filters.stayIntent).toBe("lazer");
+
+  const matches = applyFilters(SPACES, filters);
+  expect(matches.length).toBeGreaterThan(0);
+  for (const space of matches) {
+    expect(
+      space.allowedUses.some((use) => LEISURE_USES.includes(use)),
+      `espaço sem ocasião de lazer: ${space.slug}`,
+    ).toBe(true);
+  }
+
+  expect(filtersToSearchParams(filters).get("intencao")).toBe("lazer");
+});
+
+test("um uso na URL basta para saber a intenção, sem parâmetro extra", () => {
+  const filters = filtersFromSearchParams(new URLSearchParams("uso=brincadeira"));
+
+  expect(filters.stayIntent).toBe("lazer");
+  expect(filtersToSearchParams(filters).toString()).toBe("uso=brincadeira");
+});
+
+test("intenção desconhecida na URL é ignorada", () => {
+  const filters = filtersFromSearchParams(new URLSearchParams("intencao=festa"));
+
+  expect(filters.stayIntent).toBeUndefined();
+  expect(filters.useType).toBeUndefined();
+});
+
+test("o uso explícito manda sobre a intenção da URL", () => {
+  const filters = filtersFromSearchParams(new URLSearchParams("uso=creche&intencao=lazer"));
+
+  expect(filters.useType).toBe("creche");
+  expect(filters.stayIntent).toBeUndefined();
+});
+
+/**
+ * Afrouxar a busca pode ceder bairro, zona ou período, mas nunca a intenção:
+ * quem procura hospedagem não quer ver espaço que só recebe para brincar.
+ */
+test("a busca ampliada preserva a intenção de estadia", () => {
+  // Campo Belo só tem um espaço, e ele não recebe estadia: a busca precisa
+  // ceder o bairro em vez de devolver o que o tutor não pediu.
+  const filters = filtersFromSearchParams(new URLSearchParams("intencao=hospedagem&bairro=Campo Belo&caes=8"));
+  const { spaces, relaxed } = searchSpaces(SPACES, filters);
+
+  expect(spaces.length).toBeGreaterThan(0);
+  expect(relaxed).toContain("o bairro");
+  for (const space of spaces) expect(space.allowedUses).toContain("hospedagem");
 });

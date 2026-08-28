@@ -2,13 +2,34 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import HomePage from "./page";
 
+test("a home abre pela pergunta da estadia, com hospedagem e pernoite na frente", () => {
+  render(<HomePage />);
+
+  expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/hospedagem e pernoite/i);
+  expect(screen.getByRole("group", { name: /onde seu cão vai ficar/i })).toBeInTheDocument();
+
+  const radios = screen.getAllByRole("radio") as HTMLInputElement[];
+  expect(radios.map((radio) => radio.value)).toEqual(["hospedagem", "pernoite", "lazer"]);
+});
+
+test("as ocasiões começam pelas estadias e cada uma leva para a busca filtrada", () => {
+  render(<HomePage />);
+
+  const occasions = screen
+    .getAllByRole("link")
+    .map((link) => link.getAttribute("href"))
+    .filter((href): href is string => Boolean(href?.startsWith("/espacos?uso=")));
+
+  expect(occasions[0]).toBe("/espacos?uso=hospedagem");
+  expect(occasions[1]).toBe("/espacos?uso=pernoite");
+  expect(occasions).toContain("/espacos?uso=brincadeira");
+});
+
 test("a home reúne carrossel, destaques e dúvidas sem linguagem interna", () => {
   render(<HomePage />);
 
-  expect(screen.getByRole("heading", { name: "Encontre o espaço ideal para o seu cão." })).toBeInTheDocument();
-  expect(screen.queryByRole("heading", { name: /próximo passeio favorito/i })).not.toBeInTheDocument();
   expect(screen.getAllByRole("img").length).toBeGreaterThan(0);
-  expect(screen.getByRole("heading", { name: /espaços em destaque/i })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /casas para estadia/i })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /perguntas frequentes/i })).toBeInTheDocument();
   expect(screen.queryByText(/validação|acesso antecipado|ilustrativo/i)).not.toBeInTheDocument();
 });

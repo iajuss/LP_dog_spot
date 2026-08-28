@@ -7,16 +7,16 @@ type Slide = { src: string; alt: string };
 
 const SLIDES: Slide[] = [
   {
-    src: "https://images.unsplash.com/photo-1703733569670-f36996a8ca1d?auto=format&fit=crop&w=1800&q=90",
-    alt: "Cães correndo soltos em um campo gramado",
+    src: "https://images.unsplash.com/photo-1576897955702-24ad19680db3?auto=format&fit=crop&w=1800&q=90",
+    alt: "Jardim de casa com caminho de grama entre canteiros",
   },
   {
     src: "https://images.unsplash.com/photo-1715934514075-06f0dbda1c09?auto=format&fit=crop&w=1800&q=90",
     alt: "Quintal cercado com grama aparada e muro claro",
   },
   {
-    src: "https://images.unsplash.com/photo-1561283890-5d858c23b2ea?auto=format&fit=crop&w=1800&q=90",
-    alt: "Campo aberto e arborizado sob céu limpo",
+    src: "https://images.unsplash.com/photo-1655109371498-30745747d279?auto=format&fit=crop&w=1800&q=90",
+    alt: "Pátio residencial com casinha de madeira abrigada",
   },
 ];
 

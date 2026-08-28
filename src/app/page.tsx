@@ -4,7 +4,8 @@ import { FaqSection } from "@/components/faq-section";
 import { FeaturedSpaces } from "@/components/featured-spaces";
 import { HeroCarousel } from "@/components/hero-carousel";
 import { LocationSearch } from "@/components/location-search";
-import { USE_TYPES, USE_TYPE_LABELS, type UseType } from "@/lib/domain/catalog";
+import { USE_TYPE_LABELS, type UseType } from "@/lib/domain/catalog";
+import { USE_TYPES_BY_STAY_PRIORITY } from "@/lib/domain/stay";
 
 const USE_ICONS: Record<UseType, string> = {
   passeio: "🌿",
@@ -35,18 +36,19 @@ export default function HomePage() {
 
           <div className="mt-16 max-w-2xl pb-16 sm:mt-24 sm:pb-20">
             <p className="mb-5 inline-flex rounded-full bg-lime-300 px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-emerald-950">
-              Espaços para cães em São Paulo
+              Estadias para cães em São Paulo
             </p>
             <h1 className="text-[2.6rem] font-black leading-[0.95] tracking-[-0.05em] text-white sm:text-6xl lg:text-7xl">
-              Encontre o espaço ideal para o seu cão.
+              Hospedagem e pernoite em casas que recebem seu cão.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-emerald-50/90 sm:mt-6 sm:text-lg">
-              Quintais, jardins e áreas cercadas para brincar, treinar ou passar um tempo juntos.
+              Jardim cercado, área coberta e canto de descanso — e, quando o programa é junto, espaços reservados
+              para vocês dois.
             </p>
             <div className="mt-7 rounded-[1.75rem] bg-lime-300 p-2 shadow-2xl shadow-black/20 sm:mt-8 sm:rounded-[2rem]">
               <LocationSearch />
               <p className="px-4 pb-3 pt-2 text-xs font-medium text-emerald-950/70">
-                Escolha uma zona ou um bairro atendido — dá para digitar para achar.
+                Escolha a estadia e a região — dá para digitar o bairro ou a zona.
               </p>
             </div>
           </div>
@@ -59,16 +61,17 @@ export default function HomePage() {
       <section className="flex min-h-[100svh] flex-col justify-center bg-emerald-950 px-5 py-20 sm:px-8 lg:px-12">
         <div className="mx-auto w-full max-w-6xl">
           <header className="max-w-2xl">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-lime-300">Seu momento, seu ritmo</p>
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-lime-300">Cada rotina tem um ritmo</p>
             <h2 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl">
-              Para que seu cão precisa de espaço?
+              Como seu cão pode ficar
             </h2>
             <p className="mt-3 text-base leading-7 text-emerald-100/75">
-              De um passeio de uma hora a uma hospedagem de vários dias. Escolha a ocasião e veja quem atende.
+              De uma hospedagem de vários dias a uma tarde de brincadeira junto com você. Escolha a ocasião e veja
+              quem atende.
             </p>
           </header>
           <div className="mt-8 grid grid-cols-2 items-stretch gap-3 sm:gap-4 lg:grid-cols-4">
-            {USE_TYPES.map((useType) => (
+            {USE_TYPES_BY_STAY_PRIORITY.map((useType) => (
               <Link
                 className="group flex flex-col rounded-3xl border border-white/15 bg-white/[0.07] p-4 transition hover:-translate-y-1 hover:border-lime-300/60 hover:bg-white/[0.14] sm:p-5"
                 href={`/espacos?uso=${useType}`}

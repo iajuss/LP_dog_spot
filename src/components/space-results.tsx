@@ -7,10 +7,10 @@ type SpaceResultsProps = {
   filters: SearchFilters;
 };
 
-export function SpaceResults({ spaces }: SpaceResultsProps) {
+export function SpaceResults({ spaces, filters }: SpaceResultsProps) {
   return (
     <section aria-label="Espaços para cães" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-      {spaces.map((space) => <SpaceCard key={space.slug} space={space} />)}
+      {spaces.map((space) => <SpaceCard intent={filters.stayIntent} key={space.slug} space={space} />)}
     </section>
   );
 }

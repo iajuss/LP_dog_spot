@@ -11,6 +11,7 @@ import {
   type UseType,
   type Zone,
 } from "./catalog";
+import { intentForUseType, isStayIntent, usesForIntent, type StayIntent } from "./stay";
 
 export type SearchFilters = {
   query: string;
@@ -20,6 +21,8 @@ export type SearchFilters = {
   dogCount?: number;
   timeSlot?: TimeSlot;
   neighborhood?: string;
+  /** Intenção com que o tutor chegou. Nunca cede na busca ampliada. */
+  stayIntent?: StayIntent;
 };
 
 export const EMPTY_FILTERS: SearchFilters = {
@@ -31,6 +34,7 @@ const isOneOf = <T extends readonly string[]>(values: T, value: string | null): 
 
 export function applyFilters(spaces: Space[], filters: SearchFilters): Space[] {
   const normalizedQuery = filters.query.trim().toLocaleLowerCase("pt-BR");
+  const intentUses = filters.stayIntent ? usesForIntent(filters.stayIntent) : undefined;
 
   return spaces.filter((space) => {
     const searchable = [space.name, space.zone, space.neighborhoodLabel, ...space.allowedUses, ...space.amenities]
@@ -41,6 +45,7 @@ export function applyFilters(spaces: Space[], filters: SearchFilters): Space[] {
       (!normalizedQuery || searchable.includes(normalizedQuery)) &&
       (!filters.zone || space.zone === filters.zone) &&
       (!filters.useType || space.allowedUses.includes(filters.useType)) &&
+      (!intentUses || space.allowedUses.some((use) => intentUses.includes(use))) &&
       (!filters.dogSize || space.dogSizes.includes(filters.dogSize)) &&
       (!filters.dogCount || space.maxDogs >= filters.dogCount) &&
       (!filters.timeSlot || space.availableSlots.includes(filters.timeSlot)) &&
@@ -55,6 +60,8 @@ export function filtersToSearchParams(filters: SearchFilters): URLSearchParams {
   if (filters.query.trim()) params.set("busca", filters.query.trim());
   if (filters.zone) params.set("zona", filters.zone);
   if (filters.useType) params.set("uso", filters.useType);
+  // `uso` é canônico; `intencao` só aparece quando a escolha é ampla (lazer).
+  if (!filters.useType && filters.stayIntent) params.set("intencao", filters.stayIntent);
   if (filters.dogSize) params.set("porte", filters.dogSize);
   if (filters.dogCount) params.set("caes", String(filters.dogCount));
   if (filters.timeSlot) params.set("periodo", filters.timeSlot);
@@ -65,20 +72,31 @@ export function filtersToSearchParams(filters: SearchFilters): URLSearchParams {
 
 export function filtersFromSearchParams(params: URLSearchParams): SearchFilters {
   const zone = params.get("zona");
-  const useType = params.get("uso");
+  const rawUseType = params.get("uso");
+  const rawIntent = params.get("intencao");
   const dogSize = params.get("porte");
   const rawDogCount = Number(params.get("caes"));
   const timeSlot = params.get("periodo");
   const neighborhood = params.get("bairro");
 
+  // A home manda `intencao`; hospedagem e pernoite viram uso, para o painel de
+  // filtros já chegar com a ocasião marcada.
+  const intent = isStayIntent(rawIntent) ? rawIntent : undefined;
+  const useType = isOneOf(USE_TYPES, rawUseType)
+    ? rawUseType
+    : intent && intent !== "lazer"
+      ? intent
+      : undefined;
+
   return {
     query: params.get("busca") ?? "",
     zone: isOneOf(ZONES, zone) ? zone : undefined,
-    useType: isOneOf(USE_TYPES, useType) ? useType : undefined,
+    useType,
     dogSize: isOneOf(DOG_SIZES, dogSize) ? dogSize : undefined,
     dogCount: Number.isInteger(rawDogCount) && rawDogCount >= 1 && rawDogCount <= 8 ? rawDogCount : undefined,
     timeSlot: isOneOf(TIME_SLOTS, timeSlot) ? timeSlot : undefined,
     neighborhood: neighborhood && CATALOG_NEIGHBORHOODS.includes(neighborhood) ? neighborhood : undefined,
+    stayIntent: intentForUseType(useType) ?? (useType ? undefined : intent),
   };
 }
 

@@ -6,6 +6,7 @@ import { RelaxedNotice } from "@/components/relaxed-notice";
 import { SpaceResults } from "@/components/space-results";
 import { filtersFromSearchParams, searchSpaces } from "@/lib/domain/filters";
 import { SPACES } from "@/lib/domain/catalog";
+import { STAY_INTENT_LABELS, isOvernightIntent } from "@/lib/domain/stay";
 
 type ResultsPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -26,6 +27,17 @@ export default async function ResultsPage({ searchParams }: ResultsPageProps) {
   const { spaces, relaxed } = searchSpaces(SPACES, filters);
   const alertHref = `/reservar?kind=availability_alert&${params.toString()}`;
 
+  // A intenção com que o tutor chegou continua mandando na leitura da página.
+  const intent = filters.stayIntent;
+  const heading = isOvernightIntent(intent)
+    ? `${STAY_INTENT_LABELS[intent]} para o seu cão`
+    : intent === "lazer"
+      ? "Espaços para usar junto com seu cão"
+      : "Encontre um lugar que combine com vocês";
+  const subheading = isOvernightIntent(intent)
+    ? "Casas com jardim cercado, área coberta e canto de descanso. Você envia a solicitação e a equipe confirma os detalhes."
+    : "Espaços privados e reservados para passear, brincar e treinar perto de você.";
+
   return (
     <main className="min-h-screen bg-[#f8f4eb] px-5 py-6 sm:px-8 lg:px-12">
       <header className="mx-auto flex max-w-7xl items-center justify-between">
@@ -34,8 +46,8 @@ export default async function ResultsPage({ searchParams }: ResultsPageProps) {
       </header>
       <div className="mx-auto max-w-7xl py-10">
         <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">São Paulo</p>
-        <h1 className="mt-2 text-4xl font-black tracking-tight text-emerald-950">Encontre um pátio que combine com vocês</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">Espaços privados para passear, brincar e treinar perto de você.</p>
+        <h1 className="mt-2 text-4xl font-black tracking-tight text-emerald-950">{heading}</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">{subheading}</p>
         <div className="mt-8 grid gap-7 md:grid-cols-[17rem_1fr]">
           <aside><FilterPanel filters={filters} /></aside>
           <section>

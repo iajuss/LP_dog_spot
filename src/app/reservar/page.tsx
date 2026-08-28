@@ -12,6 +12,7 @@ import {
   type UseType,
   type Zone,
 } from "@/lib/domain/catalog";
+import { intentForUseType, isOvernightIntent } from "@/lib/domain/stay";
 
 type Props = { searchParams: Promise<Record<string, string | undefined>> };
 
@@ -31,6 +32,8 @@ export default async function ReservationPage({ searchParams }: Props) {
   const desiredNeighborhood = space?.neighborhood ?? pick(SP_NEIGHBORHOODS, params.bairro);
   const useType = (space?.allowedUses[0] ?? pick(USE_TYPES, params.uso)) as UseType | undefined;
   const timeSlot = (space?.availableSlots[0] ?? pick(TIME_SLOTS, params.periodo)) as TimeSlot | undefined;
+  // A ocasião continua vindo do `uso`: aqui muda só a forma de contar a história.
+  const stayFocus = isOvernightIntent(intentForUseType(useType));
 
   return (
     <main className="min-h-screen bg-[#f8f4eb] px-5 py-6 sm:px-8">
@@ -38,14 +41,24 @@ export default async function ReservationPage({ searchParams }: Props) {
         <BrandLogo />
 
         <p className="mt-10 text-sm font-bold uppercase tracking-[.16em] text-emerald-700">
-          {isReservation ? "Solicitação de reserva" : "Aviso de disponibilidade"}
+          {isReservation
+            ? stayFocus
+              ? "Solicitação de estadia"
+              : "Solicitação de reserva"
+            : "Aviso de disponibilidade"}
         </p>
         <h1 className="mt-2 text-4xl font-black tracking-tight text-emerald-950">
-          {isReservation ? "Vamos encontrar o melhor momento para vocês." : "Conte o que você procura."}
+          {isReservation
+            ? stayFocus
+              ? "Vamos organizar a estadia do seu cão."
+              : "Vamos encontrar o melhor momento para vocês."
+            : "Conte o que você procura."}
         </h1>
         <p className="mt-3 text-stone-600">
           {isReservation
-            ? "Preencha os detalhes e confirme seu e-mail para enviar sua solicitação."
+            ? stayFocus
+              ? "Conte as datas e o que seu cão precisa, e confirme seu e-mail para enviar a solicitação."
+              : "Preencha os detalhes e confirme seu e-mail para enviar sua solicitação."
             : "Deixe seus dados para receber um aviso quando houver uma opção que combine com vocês."}
         </p>
 

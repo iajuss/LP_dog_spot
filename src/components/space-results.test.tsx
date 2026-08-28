@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { getSpaceBySlug } from "@/lib/domain/catalog";
+import { SPACES, getSpaceBySlug } from "@/lib/domain/catalog";
 import { EMPTY_FILTERS } from "@/lib/domain/filters";
 import { SpaceResults } from "./space-results";
 
@@ -22,4 +22,12 @@ test("o card informa tipo de espaço e períodos que recebe", () => {
 
   expect(screen.getByText("Quintal")).toBeInTheDocument();
   expect(screen.getByText(/Manhã · Tarde · Noite/)).toBeInTheDocument();
+});
+
+test("os resultados de hospedagem passam a intenção para os cards", () => {
+  const spaces = SPACES.filter((space) => space.allowedUses.includes("hospedagem")).slice(0, 2);
+
+  render(<SpaceResults filters={{ query: "", useType: "hospedagem", stayIntent: "hospedagem" }} spaces={spaces} />);
+
+  expect(screen.getAllByText(/recebe para estadia/i)).toHaveLength(spaces.length);
 });

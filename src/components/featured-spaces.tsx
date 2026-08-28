@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FEATURED_SPACES, SPACE_TYPE_LABELS } from "@/lib/domain/catalog";
+import { FEATURED_SPACES, SPACES, SPACE_TYPE_LABELS, STAY_FEATURE_LABELS } from "@/lib/domain/catalog";
 
 /** Seção 1 do corpo: creme quente, a cor base da marca. */
 export function FeaturedSpaces() {
@@ -9,10 +9,10 @@ export function FeaturedSpaces() {
       <div className="mx-auto w-full max-w-6xl">
         {/* 1. Cabeçalho da seção */}
         <header className="max-w-2xl">
-          <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">Atalho rápido</p>
-          <h2 className="mt-2 text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl">Espaços em destaque</h2>
+          <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">Hospedagem e pernoite</p>
+          <h2 className="mt-2 text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl">Casas para estadia</h2>
           <p className="mt-3 text-base leading-7 text-stone-600">
-            Um espaço marcante de cada canto da cidade, para você começar por algum lugar.
+            Jardim cercado, área coberta e canto de descanso — uma casa em cada canto da cidade.
           </p>
         </header>
 
@@ -39,6 +39,12 @@ export function FeaturedSpaces() {
                     {SPACE_TYPE_LABELS[space.spaceType]} · {space.zone}
                   </p>
                   <h3 className="mt-1 text-base font-black leading-tight text-emerald-950">{space.name}</h3>
+                  {/* Só os sinais que este espaço tem: o metadado de estadia é opcional. */}
+                  <p className="mt-1 line-clamp-2 text-xs leading-5 text-stone-600">
+                    {space.stayFeatures?.length
+                      ? space.stayFeatures.map((feature) => STAY_FEATURE_LABELS[feature]).join(" · ")
+                      : `Até ${space.maxDogs} ${space.maxDogs === 1 ? "cão" : "cães"}`}
+                  </p>
                 </div>
               </Link>
             </li>
@@ -51,7 +57,7 @@ export function FeaturedSpaces() {
             className="inline-flex min-h-11 items-center rounded-full bg-emerald-950 px-6 text-sm font-bold text-white transition hover:bg-emerald-800"
             href="/espacos"
           >
-            Ver os 30 espaços →
+            Ver os {SPACES.length} espaços →
           </Link>
         </div>
       </div>
