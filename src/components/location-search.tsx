@@ -17,27 +17,29 @@ const OPTIONS: ComboOption[] = [
 
 export function LocationSearch() {
   return (
-    <form
-      action="/espacos"
-      className="grid gap-1 rounded-3xl bg-white p-2 shadow-xl shadow-emerald-950/10"
-      onSubmit={() => trackEvent("search_started")}
-    >
+    <form action="/espacos" className="grid gap-4" onSubmit={() => trackEvent("search_started")}>
+      {/* Os chips ficam soltos sobre a foto; só a busca ganha o bloco de cor. */}
       <StayIntentPicker />
-      <div className="flex items-center gap-2 border-t border-stone-100 pt-2">
-        <ComboBox
-          className="min-w-0 grow"
-          label="Bairro ou zona em São Paulo"
-          labelHidden
-          name="bairro"
-          options={OPTIONS}
-          placeholder="Bairro ou zona"
-        />
-        <button
-          className="shrink-0 rounded-2xl bg-emerald-950 px-6 py-3 text-sm font-bold text-white transition hover:bg-emerald-800"
-          type="submit"
-        >
-          Buscar
-        </button>
+      <div className="rounded-[1.5rem] bg-lime-300 p-1.5 shadow-2xl shadow-black/20 sm:rounded-[1.75rem]">
+        <div className="flex items-center gap-2 rounded-[1.15rem] bg-white p-2 sm:rounded-[1.35rem]">
+          <ComboBox
+            className="min-w-0 grow"
+            label="Bairro ou zona em São Paulo"
+            labelHidden
+            name="bairro"
+            options={OPTIONS}
+            placeholder="Bairro ou zona"
+          />
+          <button
+            className="shrink-0 rounded-2xl bg-emerald-950 px-6 py-3 text-sm font-bold text-white transition hover:bg-emerald-800"
+            type="submit"
+          >
+            Buscar
+          </button>
+        </div>
+        <p className="px-3 pb-1.5 pt-2 text-[0.7rem] font-medium text-emerald-950/70">
+          Dá para digitar o bairro ou a zona — e escolher a estadia é opcional.
+        </p>
       </div>
     </form>
   );

@@ -44,11 +44,8 @@ export default function HomePage() {
             <p className="mt-3 max-w-xl text-sm leading-6 text-emerald-50/90 sm:mt-4 sm:text-base">
               Jardim cercado, área coberta e canto de descanso — e espaços reservados para o programa junto.
             </p>
-            <div className="mt-5 rounded-[1.5rem] bg-lime-300 p-1.5 shadow-2xl shadow-black/20 sm:mt-6 sm:rounded-[1.75rem]">
+            <div className="mt-6 sm:mt-7">
               <LocationSearch />
-              <p className="px-3 pb-2 pt-1.5 text-[0.7rem] font-medium text-emerald-950/70">
-                Escolha a estadia e a região — dá para digitar o bairro ou a zona.
-              </p>
             </div>
           </div>
         </div>

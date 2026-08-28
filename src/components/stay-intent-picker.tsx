@@ -10,8 +10,9 @@ import {
 } from "@/lib/domain/stay";
 
 /**
- * A primeira pergunta da home. Hospedagem e pernoite ocupam a linha de cima;
- * lazer fica embaixo, menor, como opção complementar.
+ * A pergunta da primeira tela, em três chips soltos sobre a foto — sem caixa,
+ * para não competir com o herói. Hospedagem e pernoite vêm sólidos; lazer é um
+ * contorno leve, do tamanho da sua importância.
  *
  * São botões alternáveis, e não rádios, porque responder é opcional: nada vem
  * marcado, clicar de novo desfaz a escolha e quem só quer olhar a região busca
@@ -22,63 +23,52 @@ export function StayIntentPicker({ defaultIntent }: { defaultIntent?: StayIntent
   const toggle = (intent: StayIntent) => setSelected((current) => (current === intent ? undefined : intent));
 
   return (
-    <div
-      aria-label="Onde seu cão vai ficar enquanto você não está?"
-      className="grid gap-1.5 px-1 pb-1.5 pt-1"
-      role="group"
-    >
-      <p className="px-2 pb-1.5 text-sm font-bold text-emerald-950">Onde seu cão vai ficar enquanto você não está?</p>
-      <div className="grid grid-cols-2 gap-1.5">
-        {STAY_INTENTS.filter((intent) => isOvernightIntent(intent)).map((intent) => (
-          <IntentOption intent={intent} key={intent} onToggle={toggle} prominent selected={selected === intent} />
+    <div aria-label="Onde seu cão vai ficar enquanto você não está?" role="group">
+      <p className="text-sm font-medium text-emerald-50/80">Onde seu cão vai ficar enquanto você não está?</p>
+      <div className="mt-2.5 flex flex-wrap items-center gap-2">
+        {STAY_INTENTS.map((intent) => (
+          <IntentChip
+            intent={intent}
+            key={intent}
+            onToggle={toggle}
+            prominent={isOvernightIntent(intent)}
+            selected={selected === intent}
+          />
         ))}
       </div>
-      {STAY_INTENTS.filter((intent) => !isOvernightIntent(intent)).map((intent) => (
-        <IntentOption intent={intent} key={intent} onToggle={toggle} selected={selected === intent} />
-      ))}
       {/* Só viaja na URL quando o tutor escolheu de fato. */}
       {selected ? <input name="intencao" type="hidden" value={selected} /> : null}
     </div>
   );
 }
 
-function IntentOption({
+function IntentChip({
   intent,
   onToggle,
-  prominent = false,
+  prominent,
   selected,
 }: {
   intent: StayIntent;
   onToggle: (intent: StayIntent) => void;
-  prominent?: boolean;
+  prominent: boolean;
   selected: boolean;
 }) {
+  const resting = prominent
+    ? "bg-white/90 text-emerald-950 hover:bg-white"
+    : "border border-white/40 text-emerald-50 hover:bg-white/10";
+
   return (
     <button
+      // O chip mostra só o rótulo; a explicação fica no nome acessível.
+      aria-label={`${STAY_INTENT_LABELS[intent]} — ${STAY_INTENT_TAGLINES[intent]}`}
       aria-pressed={selected}
-      className={`flex items-start gap-2.5 rounded-2xl border-2 bg-white px-3 text-left transition ${
-        prominent ? "py-2.5" : "py-2"
-      } ${selected ? "border-emerald-950 shadow-sm" : "border-stone-200 hover:border-emerald-950/40"}`}
+      className={`min-h-11 rounded-full px-5 text-sm font-bold transition ${
+        selected ? "bg-lime-300 text-emerald-950 shadow-lg shadow-black/20" : resting
+      }`}
       onClick={() => onToggle(intent)}
       type="button"
     >
-      <span
-        aria-hidden="true"
-        className={`mt-1 grid size-4 shrink-0 place-items-center rounded-full border-2 transition ${
-          selected ? "border-emerald-950" : "border-stone-300"
-        }`}
-      >
-        <span className={`size-2 rounded-full transition ${selected ? "bg-emerald-950" : "bg-transparent"}`} />
-      </span>
-      <span className="min-w-0">
-        <span className={`block font-black leading-tight text-emerald-950 ${prominent ? "text-[0.95rem]" : "text-sm"}`}>
-          {STAY_INTENT_LABELS[intent]}
-        </span>
-        {/* No celular o rótulo basta; a explicação aparece quando há largura. */}
-        <span className="mt-0.5 hidden text-[0.7rem] leading-4 text-stone-600 sm:block">
-          {STAY_INTENT_TAGLINES[intent]}
-        </span>
-      </span>
+      {STAY_INTENT_LABELS[intent]}
     </button>
   );
 }
