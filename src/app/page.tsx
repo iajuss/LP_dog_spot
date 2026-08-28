@@ -4,9 +4,18 @@ import { FaqSection } from "@/components/faq-section";
 import { FeaturedSpaces } from "@/components/featured-spaces";
 import { HeroCarousel } from "@/components/hero-carousel";
 import { LocationSearch } from "@/components/location-search";
-import { USE_TYPES, USE_TYPE_LABELS } from "@/lib/domain/catalog";
+import { USE_TYPES, USE_TYPE_LABELS, type UseType } from "@/lib/domain/catalog";
 
-const USE_ICONS = ["🌿", "🎾", "✨", "🐕"];
+const USE_ICONS: Record<UseType, string> = {
+  passeio: "🌿",
+  brincadeira: "🎾",
+  treino: "🎯",
+  socializacao: "🐕",
+  creche: "☀️",
+  pernoite: "🌙",
+  hospedagem: "🏡",
+  evento: "🎉",
+};
 
 export default function HomePage() {
   return (
@@ -56,17 +65,17 @@ export default function HomePage() {
               Para que seu cão precisa de espaço?
             </h2>
             <p className="mt-3 text-base leading-7 text-emerald-100/75">
-              Escolha pelo que vocês querem fazer e veja só os espaços que aceitam esse uso.
+              De um passeio de uma hora a uma hospedagem de vários dias. Escolha a ocasião e veja quem atende.
             </p>
           </header>
           <div className="mt-8 grid grid-cols-2 items-stretch gap-3 sm:gap-4 lg:grid-cols-4">
-            {USE_TYPES.map((useType, index) => (
+            {USE_TYPES.map((useType) => (
               <Link
                 className="group flex flex-col rounded-3xl border border-white/15 bg-white/[0.07] p-4 transition hover:-translate-y-1 hover:border-lime-300/60 hover:bg-white/[0.14] sm:p-5"
                 href={`/espacos?uso=${useType}`}
                 key={useType}
               >
-                <span className="text-2xl">{USE_ICONS[index]}</span>
+                <span className="text-2xl">{USE_ICONS[useType]}</span>
                 <h3 className="mt-6 text-base font-black leading-tight text-white transition group-hover:text-lime-300 sm:mt-8 sm:text-lg">
                   {USE_TYPE_LABELS[useType]}
                 </h3>

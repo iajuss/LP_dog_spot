@@ -1,4 +1,4 @@
-import { CATALOG_NEIGHBORHOODS, SPACES, SPACE_TYPES, SP_NEIGHBORHOODS, ZONES } from "./catalog";
+import { CATALOG_NEIGHBORHOODS, OVERNIGHT_USES, SPACES, SPACE_TYPES, SP_NEIGHBORHOODS, USE_TYPES, USE_TYPE_LABELS, ZONES } from "./catalog";
 
 test("catálogo cobre São Paulo com trinta espaços e fotos únicas", () => {
   expect(SPACES).toHaveLength(30);
@@ -37,13 +37,35 @@ test("todo espaço atende a pelo menos dois usos, e a maioria a três", () => {
   expect(comTresOuMais.length).toBeGreaterThan(SPACES.length / 2);
 });
 
-test("cada tipo de uso tem espaço em toda zona da cidade", () => {
+test("oferece também as ocasiões de estadia, não só de visita curta", () => {
+  for (const use of ["creche", "pernoite", "hospedagem", "evento"] as const) {
+    expect(USE_TYPES, `vertical ausente: ${use}`).toContain(use);
+    expect(USE_TYPE_LABELS[use], `rótulo ausente: ${use}`).toBeTruthy();
+  }
+});
+
+test("toda vertical tem espaço em mais de uma zona, para comparar praças", () => {
+  for (const use of USE_TYPES) {
+    const zonas = new Set(SPACES.filter((space) => space.allowedUses.includes(use)).map((space) => space.zone));
+    expect(zonas.size, `vertical concentrada numa praça só: ${use}`).toBeGreaterThanOrEqual(2);
+  }
+});
+
+test("toda zona atende a pelo menos quatro verticais", () => {
   for (const zone of ZONES) {
-    const naZona = SPACES.filter((space) => space.zone === zone);
-    for (const use of ["passeio", "brincadeira", "treino", "socializacao"] as const) {
-      expect(naZona.some((space) => space.allowedUses.includes(use)), `${zone} sem espaço para ${use}`).toBe(true);
+    const verticais = new Set(SPACES.filter((space) => space.zone === zone).flatMap((space) => space.allowedUses));
+    expect(verticais.size, `praça pobre em verticais: ${zone}`).toBeGreaterThanOrEqual(4);
+  }
+});
+
+test("estadia só em espaço com abrigo, nunca em campo aberto", () => {
+  for (const space of SPACES) {
+    const temEstadia = space.allowedUses.some((use) => OVERNIGHT_USES.includes(use));
+    if (temEstadia) {
+      expect(["quintal", "salao", "terraco"], `estadia em espaço inadequado: ${space.slug}`).toContain(space.spaceType);
     }
   }
+  expect(SPACES.filter((space) => space.allowedUses.includes("hospedagem")).length).toBeGreaterThanOrEqual(4);
 });
 
 test("o catálogo varia a capacidade", () => {

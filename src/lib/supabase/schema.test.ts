@@ -98,3 +98,19 @@ test("a view de desistências ignora quem chegou a enviar o pedido", () => {
   expect(view).toContain("interest_leads");
   expect(view).toContain("revoke all on public.abandoned_requests from anon, authenticated");
 });
+
+test("o banco conhece as verticais de estadia", () => {
+  for (const vertical of ["creche", "pernoite", "hospedagem", "evento"]) {
+    expect(schemaSql, `vertical ausente no enum: ${vertical}`).toContain(`add value if not exists '${vertical}'`);
+  }
+});
+
+test("existe uma visão de praça por vertical, restrita ao service_role", () => {
+  const view = schemaSql.slice(schemaSql.lastIndexOf("create or replace view public.demand_by_market"));
+  const ids = identifiersIn(view);
+
+  for (const column of ["zona", "bairro", "vertical", "confirmados", "pendentes", "rascunhos", "total"]) {
+    expect(ids, `coluna ausente: ${column}`).toContain(column);
+  }
+  expect(view).toContain("revoke all on public.demand_by_market from anon, authenticated");
+});
