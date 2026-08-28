@@ -11,7 +11,7 @@ import {
   ZONES,
 } from "@/lib/domain/catalog";
 import type { SearchFilters } from "@/lib/domain/filters";
-import { ComboBox } from "./combo-box";
+import { ComboBox, toComboOptions } from "./combo-box";
 import { StyledSelect } from "./styled-select";
 
 type FilterPanelProps = {
@@ -30,7 +30,7 @@ export function FilterPanel({ filters }: FilterPanelProps) {
           hint="Digite para encontrar mais rápido."
           label="Bairro"
           name="bairro"
-          options={CATALOG_NEIGHBORHOODS}
+          options={toComboOptions(CATALOG_NEIGHBORHOODS)}
           placeholder="Todos os bairros"
           value={filters.neighborhood}
         />

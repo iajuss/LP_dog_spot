@@ -2,15 +2,29 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 
+export type ComboOption = {
+  label: string;
+  value: string;
+  /** Campo enviado no formulário quando esta opção é escolhida. Cai no `name` do componente se ausente. */
+  param?: string;
+};
+
+/** Atalho para listas simples, em que rótulo e valor são iguais. */
+export const toComboOptions = (values: readonly string[]): ComboOption[] =>
+  values.map((value) => ({ label: value, value }));
+
 type ComboBoxProps = {
   label: string;
   name: string;
-  options: string[];
+  options: ComboOption[];
   placeholder: string;
   value?: string;
   /** Texto de apoio abaixo do campo. */
   hint?: string;
   required?: boolean;
+  /** Esconde o rótulo visualmente, mantendo-o para leitores de tela. */
+  labelHidden?: boolean;
+  className?: string;
 };
 
 /** Compara ignorando acento e caixa, para "sao" encontrar "São". */
@@ -19,14 +33,26 @@ const normalize = (text: string) =>
 
 /**
  * Seleção com a mesma aparência dos outros filtros, mas onde dá para digitar
- * para achar o bairro. Só valores da lista são enviados no formulário.
+ * para achar a opção. Só valores da lista são enviados no formulário.
  */
-export function ComboBox({ label, name, options, placeholder, value = "", hint, required = false }: ComboBoxProps) {
-  const [query, setQuery] = useState(value);
-  const [selected, setSelected] = useState(options.includes(value) ? value : "");
+export function ComboBox({
+  label,
+  name,
+  options,
+  placeholder,
+  value = "",
+  hint,
+  required = false,
+  labelHidden = false,
+  className = "",
+}: ComboBoxProps) {
+  const initial = options.find((option) => option.value === value);
+  const [query, setQuery] = useState(initial?.label ?? "");
+  const [selected, setSelected] = useState<ComboOption | undefined>(initial);
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const listId = useId();
+  const inputId = useId();
   const blurTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   // O fechamento por blur é adiado, então precisa ler o valor atual — e não o
@@ -37,34 +63,34 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
   }, [selected]);
 
   const matches = useMemo(() => {
-    if (!query.trim() || query === selected) return options;
-    return options.filter((option) => normalize(option).includes(normalize(query)));
+    if (!query.trim() || query === selected?.label) return options;
+    return options.filter((option) => normalize(option.label).includes(normalize(query)));
   }, [options, query, selected]);
 
-  function choose(option: string) {
+  function choose(option: ComboOption) {
     if (blurTimer.current) clearTimeout(blurTimer.current);
     selectedRef.current = option;
     setSelected(option);
-    setQuery(option);
+    setQuery(option.label);
     setIsOpen(false);
     setActiveIndex(-1);
   }
 
   function clear() {
     if (blurTimer.current) clearTimeout(blurTimer.current);
-    selectedRef.current = "";
-    setSelected("");
+    selectedRef.current = undefined;
+    setSelected(undefined);
     setQuery("");
     setActiveIndex(-1);
   }
 
   return (
-    <div className="relative grid gap-2 text-sm font-medium text-emerald-950">
-      <label className="font-medium" htmlFor={`${listId}-input`}>
+    <div className={`relative grid gap-2 text-sm font-medium text-emerald-950 ${className}`}>
+      <label className={labelHidden ? "sr-only" : "font-medium"} htmlFor={inputId}>
         {label}
       </label>
 
-      <input name={name} type="hidden" value={selected} />
+      <input name={selected?.param ?? name} type="hidden" value={selected?.value ?? ""} />
 
       <div className="relative">
         <input
@@ -74,17 +100,17 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
           autoComplete="off"
           // Mesmo peso e cor dos StyledSelect ao lado, para a coluna de filtros ficar uniforme.
           className="w-full rounded-2xl border border-emerald-950/10 bg-[#f8f4eb] px-4 py-3 pr-10 font-semibold text-emerald-950 outline-none transition placeholder:font-semibold placeholder:text-emerald-950 hover:border-emerald-800 focus:ring-2 focus:ring-lime-300"
-          id={`${listId}-input`}
+          id={inputId}
           onBlur={() => {
             // Espera o clique na opção acontecer antes de fechar a lista.
             blurTimer.current = setTimeout(() => {
               setIsOpen(false);
-              setQuery(selectedRef.current);
+              setQuery(selectedRef.current?.label ?? "");
             }, 120);
           }}
           onChange={(event) => {
             setQuery(event.target.value);
-            setSelected("");
+            setSelected(undefined);
             setIsOpen(true);
             setActiveIndex(-1);
           }}
@@ -107,7 +133,7 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
               }
             } else if (event.key === "Escape") {
               setIsOpen(false);
-              setQuery(selectedRef.current);
+              setQuery(selectedRef.current?.label ?? "");
             }
           }}
           placeholder={placeholder}
@@ -117,7 +143,7 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
           value={query}
         />
 
-        {selected || query ? (
+        {query ? (
           <button
             aria-label={`Limpar ${label.toLocaleLowerCase("pt-BR")}`}
             className="absolute right-1 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full text-stone-500 transition hover:bg-stone-200/70 hover:text-emerald-950"
@@ -139,7 +165,7 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
             role="listbox"
           >
             <button
-              aria-selected={selected === ""}
+              aria-selected={selected === undefined}
               className="block w-full rounded-xl px-3 py-2.5 text-left text-sm text-stone-600 transition hover:bg-lime-100"
               onClick={clear}
               role="option"
@@ -150,21 +176,21 @@ export function ComboBox({ label, name, options, placeholder, value = "", hint, 
             {matches.length ? (
               matches.map((option, index) => (
                 <button
-                  aria-selected={option === selected}
+                  aria-selected={selected?.value === option.value}
                   className={`block w-full rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-emerald-950 transition ${
                     index === activeIndex ? "bg-lime-200" : "hover:bg-lime-100"
                   }`}
-                  key={option}
+                  key={`${option.param ?? name}:${option.value}`}
                   onClick={() => choose(option)}
                   onMouseEnter={() => setActiveIndex(index)}
                   role="option"
                   type="button"
                 >
-                  {option}
+                  {option.label}
                 </button>
               ))
             ) : (
-              <p className="px-3 py-3 text-sm font-normal text-stone-500">Nenhum bairro encontrado.</p>
+              <p className="px-3 py-3 text-sm font-normal text-stone-500">Nenhuma opção encontrada.</p>
             )}
           </div>
         ) : null}

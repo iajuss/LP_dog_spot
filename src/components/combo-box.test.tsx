@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ComboBox } from "./combo-box";
+import { ComboBox, toComboOptions } from "./combo-box";
 
 const OPTIONS = ["Moema", "Mooca", "Pinheiros", "Santana", "São Miguel Paulista", "Jaçanã"];
 
 function renderComboBox(value?: string) {
-  render(<ComboBox label="Bairro" name="bairro" options={OPTIONS} placeholder="Todos os bairros" value={value} />);
+  render(<ComboBox label="Bairro" name="bairro" options={toComboOptions(OPTIONS)} placeholder="Todos os bairros" value={value} />);
   return screen.getByRole("combobox", { name: /bairro/i });
 }
 
@@ -54,7 +54,7 @@ test("só envia bairros da lista: texto solto não vira valor", async () => {
   await user.type(input, "Bairro Inexistente");
 
   expect(document.querySelector('input[name="bairro"]')).toHaveValue("");
-  expect(screen.getByText(/nenhum bairro encontrado/i)).toBeInTheDocument();
+  expect(screen.getByText(/nenhuma opção encontrada/i)).toBeInTheDocument();
 });
 
 test("navega com o teclado e seleciona com Enter", async () => {

@@ -3,7 +3,7 @@ import { BrandLogo } from "@/components/brand-logo";
 import { FaqSection } from "@/components/faq-section";
 import { FeaturedSpaces } from "@/components/featured-spaces";
 import { HeroCarousel } from "@/components/hero-carousel";
-import { SearchBar } from "@/components/search-bar";
+import { LocationSearch } from "@/components/location-search";
 import { USE_TYPES, USE_TYPE_LABELS } from "@/lib/domain/catalog";
 
 const USE_ICONS = ["🌿", "🎾", "✨", "🐕"];
@@ -36,9 +36,9 @@ export default function HomePage() {
               Quintais, jardins e áreas cercadas para brincar, treinar ou passar um tempo juntos.
             </p>
             <div className="mt-7 rounded-[1.75rem] bg-lime-300 p-2 shadow-2xl shadow-black/20 sm:mt-8 sm:rounded-[2rem]">
-              <SearchBar />
+              <LocationSearch />
               <p className="px-4 pb-3 pt-2 text-xs font-medium text-emerald-950/70">
-                Busque por bairro, zona ou pelo que seu cão precisa.
+                Escolha uma zona ou um bairro atendido — dá para digitar para achar.
               </p>
             </div>
           </div>

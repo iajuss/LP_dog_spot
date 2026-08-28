@@ -22,11 +22,32 @@ test("o catálogo mistura tipos de espaço diferentes", () => {
   expect(SPACE_TYPES.length).toBeGreaterThanOrEqual(5);
 });
 
-test("o catálogo varia capacidade, porte e uso", () => {
+test("todo espaço aceita cães de qualquer porte", () => {
+  for (const space of SPACES) {
+    expect(space.dogSizes, `porte faltando em ${space.slug}`).toEqual(["pequeno", "medio", "grande"]);
+  }
+});
+
+test("todo espaço atende a pelo menos dois usos, e a maioria a três", () => {
+  for (const space of SPACES) {
+    expect(space.allowedUses.length, `uso restrito demais em ${space.slug}`).toBeGreaterThanOrEqual(2);
+  }
+
+  const comTresOuMais = SPACES.filter((space) => space.allowedUses.length >= 3);
+  expect(comTresOuMais.length).toBeGreaterThan(SPACES.length / 2);
+});
+
+test("cada tipo de uso tem espaço em toda zona da cidade", () => {
+  for (const zone of ZONES) {
+    const naZona = SPACES.filter((space) => space.zone === zone);
+    for (const use of ["passeio", "brincadeira", "treino", "socializacao"] as const) {
+      expect(naZona.some((space) => space.allowedUses.includes(use)), `${zone} sem espaço para ${use}`).toBe(true);
+    }
+  }
+});
+
+test("o catálogo varia a capacidade", () => {
   expect(new Set(SPACES.map((space) => space.maxDogs)).size).toBeGreaterThanOrEqual(4);
-  expect(SPACES.some((space) => space.dogSizes.length === 1)).toBe(true);
-  expect(SPACES.some((space) => space.dogSizes.length === 3)).toBe(true);
-  expect(SPACES.some((space) => space.allowedUses.length >= 3)).toBe(true);
 });
 
 test("nenhum bairro se repete dentro da mesma zona", () => {
