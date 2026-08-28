@@ -7,6 +7,8 @@ import type { UseType } from "./catalog";
  */
 export const STAY_INTENTS = ["hospedagem", "pernoite", "lazer"] as const;
 export type StayIntent = (typeof STAY_INTENTS)[number];
+/** As intenções em que o cão dorme fora — sempre um `UseType` do catálogo. */
+export type OvernightIntent = Extract<StayIntent, "hospedagem" | "pernoite">;
 
 export const STAY_INTENT_LABELS: Record<StayIntent, string> = {
   hospedagem: "Hospedagem",
@@ -50,7 +52,7 @@ export function intentForUseType(useType: UseType | undefined): StayIntent | und
 }
 
 /** Intenções em que o cão dorme fora e a copy fala de acolhimento. */
-export function isOvernightIntent(intent: StayIntent | undefined): boolean {
+export function isOvernightIntent(intent: StayIntent | undefined): intent is OvernightIntent {
   return intent === "hospedagem" || intent === "pernoite";
 }
 
