@@ -7,23 +7,51 @@ import {
   AMENITY_LABELS,
   DOG_SIZE_LABELS,
   SPACE_TYPE_LABELS,
+  STAY_FEATURE_LABELS,
   TIME_SLOT_LABELS,
+  USE_TYPES,
   USE_TYPE_LABELS,
   getSpaceBySlug,
+  type UseType,
 } from "@/lib/domain/catalog";
+import { intentForUseType, isOvernightIntent, isStayIntent, type StayIntent } from "@/lib/domain/stay";
 
-type SpaceDetailPageProps = { params: Promise<{ slug: string }> };
+type SpaceDetailPageProps = {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
 
-export default async function SpaceDetailPage({ params }: SpaceDetailPageProps) {
+export default async function SpaceDetailPage({ params, searchParams }: SpaceDetailPageProps) {
   const space = getSpaceBySlug((await params).slug);
   if (!space) notFound();
+
+  const query = (await searchParams) ?? {};
+  const rawUse = typeof query.uso === "string" ? query.uso : undefined;
+  const rawIntent = typeof query.intencao === "string" ? query.intencao : undefined;
+  const urlUse = (USE_TYPES as readonly string[]).includes(rawUse ?? "") ? (rawUse as UseType) : undefined;
+
+  /**
+   * A intenção vem da URL; sem ela, estadia é o padrão de quem recebe estadia.
+   * É o cerne do produto — lazer só assume quando o espaço não acolhe à noite.
+   */
+  const intent: StayIntent =
+    intentForUseType(urlUse) ??
+    (isStayIntent(rawIntent) ? rawIntent : undefined) ??
+    (space.allowedUses.includes("hospedagem")
+      ? "hospedagem"
+      : space.allowedUses.includes("pernoite")
+        ? "pernoite"
+        : "lazer");
+
+  const stayFocus = isOvernightIntent(intent) && space.allowedUses.includes(intent);
+  const requestedUse = stayFocus ? intent : space.allowedUses[0];
 
   // O formulário só aceita bairros da lista, então mandamos o nome sem o prefixo.
   const requestParams = new URLSearchParams({
     space: space.slug,
     zona: space.zone,
     bairro: space.neighborhood,
-    uso: space.allowedUses[0],
+    uso: requestedUse,
     periodo: space.availableSlots[0],
   });
   const reserveHref = `/reservar?kind=reservation_request&${requestParams.toString()}`;
@@ -75,6 +103,22 @@ export default async function SpaceDetailPage({ params }: SpaceDetailPageProps) 
                 ))}
               </div>
             </div>
+            {space.stayFeatures?.length ? (
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-stone-400">Como acolhe</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {space.stayFeatures.map((feature) => (
+                    <span
+                      className="rounded-full bg-lime-100 px-3 py-1 text-sm font-medium text-emerald-950"
+                      key={feature}
+                    >
+                      {STAY_FEATURE_LABELS[feature]}
+                    </span>
+                  ))}
+                </div>
+                {space.stayNote ? <p className="mt-3 text-sm leading-6 text-stone-600">{space.stayNote}</p> : null}
+              </div>
+            ) : null}
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-stone-400">Recursos</p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -91,8 +135,14 @@ export default async function SpaceDetailPage({ params }: SpaceDetailPageProps) 
 
           {/* Ação principal: pedir uma data concreta. */}
           <section className="rounded-3xl bg-emerald-950 p-6 text-white sm:p-7">
-            <p className="text-sm font-bold uppercase tracking-[0.14em] text-lime-300">Quer usar este espaço?</p>
-            <h2 className="mt-3 text-2xl font-black leading-tight">Escolha a data e o período que combinam com vocês.</h2>
+            <p className="text-sm font-bold uppercase tracking-[0.14em] text-lime-300">
+              {stayFocus ? "Quer deixar seu cão aqui?" : "Quer usar este espaço?"}
+            </p>
+            <h2 className="mt-3 text-2xl font-black leading-tight">
+              {stayFocus
+                ? "Conte as datas da estadia e o que seu cão precisa."
+                : "Escolha a data e o período que combinam com vocês."}
+            </h2>
             <p className="mt-3 text-sm leading-6 text-emerald-50/75">
               Você envia a solicitação e confirma seu e-mail. Nossa equipe responde confirmando a disponibilidade.
             </p>
@@ -100,7 +150,7 @@ export default async function SpaceDetailPage({ params }: SpaceDetailPageProps) 
               className="mt-6 flex w-full items-center justify-center rounded-xl bg-lime-300 px-5 py-4 text-base font-black text-emerald-950 transition hover:bg-lime-200"
               href={reserveHref}
             >
-              Reservar este espaço
+              {stayFocus ? "Solicitar estadia" : "Solicitar uso do espaço"}
             </Link>
           </section>
         </aside>

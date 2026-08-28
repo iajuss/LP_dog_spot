@@ -1,20 +1,41 @@
 import { render, screen } from "@testing-library/react";
 import SpaceDetailPage from "./page";
 
-test("detalhe direciona somente para a solicitação de reserva", async () => {
-  render(await SpaceDetailPage({ params: Promise.resolve({ slug: "quintal-da-praca" }) }));
+const renderDetail = async (slug: string, query: Record<string, string> = {}) =>
+  render(await SpaceDetailPage({ params: Promise.resolve({ slug }), searchParams: Promise.resolve(query) }));
 
-  expect(screen.getByRole("link", { name: /reservar este espaço/i })).toBeInTheDocument();
+test("na intenção de hospedagem o detalhe pede uma estadia", async () => {
+  await renderDetail("casa-do-tremembe", { uso: "hospedagem" });
+
+  const cta = screen.getByRole("link", { name: /solicitar estadia/i });
+
+  expect(cta).toHaveAttribute("href", expect.stringContaining("kind=reservation_request"));
+  expect(cta).toHaveAttribute("href", expect.stringContaining("uso=hospedagem"));
+  expect(screen.getByText(/confirma seu e-mail/i)).toBeInTheDocument();
   expect(screen.queryByRole("link", { name: /quero ser avisado/i })).not.toBeInTheDocument();
 });
 
-test("a reserva mantém a explicação e o fluxo de solicitação", async () => {
-  render(await SpaceDetailPage({ params: Promise.resolve({ slug: "quintal-da-praca" }) }));
+test("na intenção de lazer o detalhe pede o uso do espaço", async () => {
+  await renderDetail("campo-do-sol", { intencao: "lazer" });
 
-  const reserve = screen.getByRole("link", { name: /reservar este espaço/i });
+  const cta = screen.getByRole("link", { name: /solicitar uso do espaço/i });
 
-  expect(reserve).toHaveAttribute("href", expect.stringContaining("kind=reservation_request"));
+  expect(cta).toHaveAttribute("href", expect.stringContaining("kind=reservation_request"));
   expect(screen.getByText(/escolha a data e o período/i)).toBeInTheDocument();
+});
+
+test("o espaço que recebe estadia mostra como acolhe", async () => {
+  await renderDetail("casa-do-tremembe", { uso: "hospedagem" });
+
+  expect(screen.getByText("Como acolhe")).toBeInTheDocument();
+  expect(screen.getByText("Canto de descanso")).toBeInTheDocument();
+});
+
+test("espaço sem metadado de estadia não mostra a seção de acolhimento", async () => {
+  await renderDetail("campo-do-sol");
+
+  expect(screen.queryByText("Como acolhe")).not.toBeInTheDocument();
+  expect(screen.getByRole("link", { name: /solicitar uso do espaço/i })).toBeInTheDocument();
 });
 
 test("mostra o tipo de espaço e os períodos que ele recebe", async () => {
