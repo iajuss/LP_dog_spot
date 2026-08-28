@@ -53,18 +53,20 @@ function IntentChip({
   prominent: boolean;
   selected: boolean;
 }) {
+  // Um vidro só para os três: o que separa estadia de lazer é o peso, não a
+  // cor. Fundos diferentes faziam a linha parecer três componentes distintos.
   const resting = prominent
-    ? "bg-white/90 text-emerald-950 hover:bg-white"
-    : "border border-white/40 text-emerald-50 hover:bg-white/10";
+    ? "border-white/45 bg-white/20 text-white hover:bg-white/30"
+    : "border-white/25 bg-white/5 text-emerald-50/85 hover:bg-white/15";
 
   return (
     <button
       // O chip mostra só o rótulo; a explicação fica no nome acessível.
       aria-label={`${STAY_INTENT_LABELS[intent]} — ${STAY_INTENT_TAGLINES[intent]}`}
       aria-pressed={selected}
-      className={`min-h-11 rounded-full px-5 text-sm font-bold transition ${
-        selected ? "bg-lime-300 text-emerald-950 shadow-lg shadow-black/20" : resting
-      }`}
+      className={`min-h-11 rounded-full border backdrop-blur-sm transition ${
+        prominent ? "px-5 text-sm font-black" : "px-4 text-[0.8rem] font-semibold"
+      } ${selected ? "border-lime-300 bg-lime-300 text-emerald-950 shadow-lg shadow-black/25" : resting}`}
       onClick={() => onToggle(intent)}
       type="button"
     >
