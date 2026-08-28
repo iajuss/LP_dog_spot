@@ -1,9 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
+import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
-  const { interest } = await request.json(); const url = process.env.NEXT_PUBLIC_SUPABASE_URL; const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY; const service = getSupabaseServer();
+  const { interest } = await request.json(); const url = getSupabaseUrl(); const key = getSupabaseAnonKey(); const service = getSupabaseServer();
   if (!url || !key || !service) return NextResponse.json({ error: "A confirmação por e-mail ainda não foi configurada." }, { status: 503 });
   const supabase = createServerClient(url, key, { cookies: { getAll: () => request.headers.get("cookie")?.split("; ").map((item) => { const [name, ...value] = item.split("="); return { name, value: value.join("=") }; }) ?? [], setAll: () => {} } });
   const { data: { user } } = await supabase.auth.getUser();

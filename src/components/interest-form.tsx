@@ -1,15 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { DOG_SIZES, DOG_SIZE_LABELS, SP_NEIGHBORHOODS, TIME_SLOTS, TIME_SLOT_LABELS, USE_TYPES, USE_TYPE_LABELS, ZONES, type TimeSlot, type UseType, type Zone } from "@/lib/domain/catalog";
+import { getAnonymousSessionId } from "@/lib/analytics";
 import { ComboBox, toComboOptions } from "./combo-box";
 import { StyledSelect } from "./styled-select";
 
 export type InterestContext = { desiredZone?: Zone; desiredNeighborhood?: string; useType?: UseType; timeSlot?: TimeSlot; spaceSlug?: string; requestKind: "reservation_request" | "availability_alert"; sourceKind: "space" | "region" | "general" };
 
+/**
+ * Campos que o rascunho pode conter. Contato fica de fora de propósito: quem
+ * não terminou o formulário não marcou o consentimento. Ver `domain/draft.ts`.
+ */
+const DRAFT_FIELDS = [
+  "homeNeighborhood",
+  "desiredNeighborhood",
+  "desiredZone",
+  "useType",
+  "dogSize",
+  "dogCount",
+  "desiredDate",
+  "timeSlot",
+  "budget",
+] as const;
+
 export function InterestForm({ context }: { context: InterestContext }) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [error, setError] = useState("");
+  const draftTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  /** Guarda o que já foi preenchido, para sabermos onde as pessoas desistem. */
+  function saveDraft(form: HTMLFormElement) {
+    if (status === "sent" || status === "sending") return;
+    if (draftTimer.current) clearTimeout(draftTimer.current);
+
+    draftTimer.current = setTimeout(() => {
+      const data = new FormData(form);
+      const filled = Object.fromEntries(
+        DRAFT_FIELDS.map((field) => [field, String(data.get(field) ?? "")]).filter(([, value]) => value !== ""),
+      );
+      if (!Object.keys(filled).length) return;
+
+      const search = new URLSearchParams(window.location.search);
+      void fetch("/api/drafts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          ...filled,
+          anonymousSessionId: getAnonymousSessionId(),
+          requestKind: context.requestKind,
+          sourceKind: context.sourceKind,
+          spaceSlug: context.spaceSlug ?? "",
+          landingPath: window.location.pathname,
+          utmSource: search.get("utm_source") ?? "",
+          utmMedium: search.get("utm_medium") ?? "",
+          utmCampaign: search.get("utm_campaign") ?? "",
+        }),
+      }).catch(() => {});
+    }, 700);
+  }
   async function submit(formData: FormData) {
     setStatus("sending"); setError("");
     const payload = {
@@ -29,7 +79,7 @@ export function InterestForm({ context }: { context: InterestContext }) {
     const body = await response.json().catch(() => ({})); setError(body.error ?? "Não foi possível enviar agora."); setStatus("error");
   }
   if (status === "sent") return <div className="rounded-3xl bg-lime-200 p-6 text-emerald-950"><h2 className="text-2xl font-black">Enviamos um link para seu e-mail.</h2><p className="mt-2 text-sm leading-6">Abra o link para confirmar sua solicitação. Assim, poderemos seguir com os próximos detalhes.</p></div>;
-  return <form action={submit} className="grid gap-5 rounded-3xl bg-white p-6 shadow-sm sm:grid-cols-2">
+  return <form action={submit} className="grid gap-5 rounded-3xl bg-white p-6 shadow-sm sm:grid-cols-2" onBlur={(event) => saveDraft(event.currentTarget)}>
     <label className="grid gap-2 text-sm font-bold text-emerald-950">Seu nome<input className="rounded-xl border border-stone-200 px-3 py-3 font-normal" name="name" required /></label>
     <label className="grid gap-2 text-sm font-bold text-emerald-950">Seu e-mail<input className="rounded-xl border border-stone-200 px-3 py-3 font-normal" name="email" required type="email" /></label>
     <label className="grid gap-2 text-sm font-bold text-emerald-950 sm:col-span-2">Telefone <span className="font-normal text-stone-500">(opcional)</span><input className="rounded-xl border border-stone-200 px-3 py-3 font-normal" name="phone" placeholder="(11) 99999-9999" type="tel" /></label>

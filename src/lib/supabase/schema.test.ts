@@ -78,3 +78,23 @@ test("demand_overview expõe contato, origem, necessidade e status da solicitaç
     expect(viewIdentifiers, `coluna ausente em demand_overview: ${column}`).toContain(column);
   }
 });
+
+test("rascunhos ficam em tabela própria, sem nenhum dado de contato", () => {
+  const drafts = schemaSql.slice(schemaSql.indexOf("create table public.request_drafts"));
+  const definition = drafts.slice(0, drafts.indexOf(");"));
+
+  expect(definition).toContain("anonymous_session_id");
+  expect(definition).toContain("desired_zone");
+
+  for (const forbidden of ["contact_name", "contact_email", "contact_phone"]) {
+    expect(definition, `rascunho não pode guardar ${forbidden}`).not.toContain(forbidden);
+  }
+});
+
+test("a view de desistências ignora quem chegou a enviar o pedido", () => {
+  const view = schemaSql.slice(schemaSql.lastIndexOf("create or replace view public.abandoned_requests"));
+
+  expect(view).toContain("not exists");
+  expect(view).toContain("interest_leads");
+  expect(view).toContain("revoke all on public.abandoned_requests from anon, authenticated");
+});
