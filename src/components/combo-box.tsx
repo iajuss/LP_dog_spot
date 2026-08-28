@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import type { ComboOption } from "./combo-options";
 
 type ComboBoxProps = {
@@ -25,7 +25,11 @@ const normalize = (text: string) =>
  * Seleção com a mesma aparência dos outros filtros, mas onde dá para digitar
  * para achar a opção. Só valores da lista são enviados no formulário.
  */
-export function ComboBox({
+export function ComboBox(props: ComboBoxProps) {
+  return <ComboBoxControl key={`${props.name}:${props.value ?? ""}`} {...props} />;
+}
+
+function ComboBoxControl({
   label,
   name,
   options,
@@ -48,9 +52,6 @@ export function ComboBox({
   // O fechamento por blur é adiado, então precisa ler o valor atual — e não o
   // que existia quando o campo perdeu o foco — para não apagar a escolha.
   const selectedRef = useRef(selected);
-  useEffect(() => {
-    selectedRef.current = selected;
-  }, [selected]);
 
   const matches = useMemo(() => {
     if (!query.trim() || query === selected?.label) return options;

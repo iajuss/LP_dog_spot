@@ -44,10 +44,16 @@ test("a maioria dos espaços atende a quatro ou mais ocasiões", () => {
 });
 
 test("oferece também as ocasiões de estadia, não só de visita curta", () => {
-  for (const use of ["creche", "pernoite", "hospedagem", "evento"] as const) {
+  for (const use of ["creche", "pernoite", "hospedagem"] as const) {
     expect(USE_TYPES, `vertical ausente: ${use}`).toContain(use);
     expect(USE_TYPE_LABELS[use], `rótulo ausente: ${use}`).toBeTruthy();
   }
+});
+
+test("não oferece festa ou evento como ocasião", () => {
+  expect(USE_TYPES).not.toContain("evento");
+  expect(Object.values(USE_TYPE_LABELS)).not.toContain("Festa ou evento");
+  for (const space of SPACES) expect(space.allowedUses).not.toContain("evento");
 });
 
 test("toda vertical tem espaço em mais de uma zona, para comparar praças", () => {

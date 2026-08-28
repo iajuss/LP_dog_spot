@@ -75,6 +75,15 @@ test("parte do valor já escolhido quando existe", () => {
   expect(document.querySelector('input[name="bairro"]')).toHaveValue("Santana");
 });
 
+test("mostra o bairro vindo de uma nova URL depois de já estar montado", () => {
+  const { rerender } = render(<ComboBox label="Bairro" name="bairro" options={toComboOptions(OPTIONS)} placeholder="Todos os bairros" />);
+
+  rerender(<ComboBox label="Bairro" name="bairro" options={toComboOptions(OPTIONS)} placeholder="Todos os bairros" value="Pinheiros" />);
+
+  expect(screen.getByRole("combobox", { name: /bairro/i })).toHaveValue("Pinheiros");
+  expect(document.querySelector('input[name="bairro"]')).toHaveValue("Pinheiros");
+});
+
 test("o bairro escolhido continua visível depois que o campo perde o foco", async () => {
   const user = userEvent.setup();
   const input = renderComboBox();

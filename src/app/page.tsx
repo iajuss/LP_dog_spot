@@ -14,7 +14,6 @@ const USE_ICONS: Record<UseType, string> = {
   creche: "☀️",
   pernoite: "🌙",
   hospedagem: "🏡",
-  evento: "🎉",
 };
 
 export default function HomePage() {
@@ -39,7 +38,7 @@ export default function HomePage() {
               Espaços para cães em São Paulo
             </p>
             <h1 className="text-[2.6rem] font-black leading-[0.95] tracking-[-0.05em] text-white sm:text-6xl lg:text-7xl">
-              O próximo passeio favorito do seu cão começa aqui.
+              Encontre o espaço ideal para o seu cão.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-emerald-50/90 sm:mt-6 sm:text-lg">
               Quintais, jardins e áreas cercadas para brincar, treinar ou passar um tempo juntos.

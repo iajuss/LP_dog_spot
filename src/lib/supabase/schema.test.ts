@@ -100,7 +100,7 @@ test("a view de desistências ignora quem chegou a enviar o pedido", () => {
 });
 
 test("o banco conhece as verticais de estadia", () => {
-  for (const vertical of ["creche", "pernoite", "hospedagem", "evento"]) {
+  for (const vertical of ["creche", "pernoite", "hospedagem"]) {
     expect(schemaSql, `vertical ausente no enum: ${vertical}`).toContain(`add value if not exists '${vertical}'`);
   }
 });

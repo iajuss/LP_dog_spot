@@ -5,6 +5,8 @@ import HomePage from "./page";
 test("a home reúne carrossel, destaques e dúvidas sem linguagem interna", () => {
   render(<HomePage />);
 
+  expect(screen.getByRole("heading", { name: "Encontre o espaço ideal para o seu cão." })).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: /próximo passeio favorito/i })).not.toBeInTheDocument();
   expect(screen.getAllByRole("img").length).toBeGreaterThan(0);
   expect(screen.getByRole("heading", { name: /espaços em destaque/i })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /perguntas frequentes/i })).toBeInTheDocument();

@@ -99,7 +99,7 @@ describe("busca com aproximação", () => {
     const resultado = searchSpaces(SPACES, {
       query: "",
       zone: "Centro",
-      useType: "evento",
+      useType: "treino",
       neighborhood: "Moema",
       dogCount: 8,
     });
@@ -108,17 +108,17 @@ describe("busca com aproximação", () => {
     expect(resultado.relaxed).toEqual(["a quantidade de cães", "o bairro"]);
     for (const space of resultado.spaces) {
       expect(space.zone).toBe("Centro");
-      expect(space.allowedUses).toContain("evento");
+      expect(space.allowedUses).toContain("treino");
     }
   });
 
   test("a zona só cede quando não sobra mais nada para ceder", () => {
     const semCentro = SPACES.filter((space) => space.zone !== "Centro");
-    const resultado = searchSpaces(semCentro, { query: "", zone: "Centro", useType: "evento" });
+    const resultado = searchSpaces(semCentro, { query: "", zone: "Centro", useType: "treino" });
 
     expect(resultado.relaxed).toEqual(["a zona"]);
     expect(resultado.spaces.length).toBeGreaterThan(0);
-    for (const space of resultado.spaces) expect(space.allowedUses).toContain("evento");
+    for (const space of resultado.spaces) expect(space.allowedUses).toContain("treino");
   });
 
   test("afrouxa só o necessário e para no primeiro resultado", () => {
