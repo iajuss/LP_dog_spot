@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import { DOG_SIZES, DOG_SIZE_LABELS, SP_NEIGHBORHOODS, TIME_SLOTS, TIME_SLOT_LABELS, USE_TYPES, USE_TYPE_LABELS, ZONES, type TimeSlot, type UseType, type Zone } from "@/lib/domain/catalog";
 import { getAnonymousSessionId } from "@/lib/analytics";
-import { ComboBox, toComboOptions } from "./combo-box";
+import { ComboBox } from "./combo-box";
+import { toComboOptions } from "./combo-options";
 import { StyledSelect } from "./styled-select";
 
 export type InterestContext = { desiredZone?: Zone; desiredNeighborhood?: string; useType?: UseType; timeSlot?: TimeSlot; spaceSlug?: string; requestKind: "reservation_request" | "availability_alert"; sourceKind: "space" | "region" | "general" };

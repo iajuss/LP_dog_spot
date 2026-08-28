@@ -2,7 +2,8 @@
 
 import { CATALOG_NEIGHBORHOODS, ZONES } from "@/lib/domain/catalog";
 import { trackEvent } from "@/lib/track-client";
-import { ComboBox, type ComboOption } from "./combo-box";
+import { ComboBox } from "./combo-box";
+import type { ComboOption } from "./combo-options";
 
 /**
  * Zonas primeiro, por serem a busca mais ampla, depois os bairros atendidos.

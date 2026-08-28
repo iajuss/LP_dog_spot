@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ComboBox, toComboOptions } from "./combo-box";
+import { ComboBox } from "./combo-box";
+import { toComboOptions } from "./combo-options";
 
 const OPTIONS = ["Moema", "Mooca", "Pinheiros", "Santana", "São Miguel Paulista", "Jaçanã"];
 

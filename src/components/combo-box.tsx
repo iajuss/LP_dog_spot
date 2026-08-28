@@ -1,17 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-
-export type ComboOption = {
-  label: string;
-  value: string;
-  /** Campo enviado no formulário quando esta opção é escolhida. Cai no `name` do componente se ausente. */
-  param?: string;
-};
-
-/** Atalho para listas simples, em que rótulo e valor são iguais. */
-export const toComboOptions = (values: readonly string[]): ComboOption[] =>
-  values.map((value) => ({ label: value, value }));
+import type { ComboOption } from "./combo-options";
 
 type ComboBoxProps = {
   label: string;

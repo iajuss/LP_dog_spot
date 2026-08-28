@@ -11,7 +11,8 @@ import {
   ZONES,
 } from "@/lib/domain/catalog";
 import type { SearchFilters } from "@/lib/domain/filters";
-import { ComboBox, toComboOptions } from "./combo-box";
+import { ComboBox } from "./combo-box";
+import { toComboOptions } from "./combo-options";
 import { StyledSelect } from "./styled-select";
 
 type FilterPanelProps = {
