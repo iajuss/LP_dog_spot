@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { afterEach, vi } from "vitest";
 import { LocationSearch } from "./location-search";
 
 const field = () => screen.getByRole("combobox", { name: /bairro ou zona/i });
@@ -9,6 +10,10 @@ const submitted = () =>
 
 beforeEach(() => {
   render(<LocationSearch />);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
 });
 
 test("oferece zonas e bairros na mesma lista", async () => {
@@ -77,4 +82,23 @@ test("dá para buscar só pela região, sem escolher intenção", async () => {
 
   expect(data.get("intencao")).toBeNull();
   expect(data.get("bairro")).toBe("Pinheiros");
+});
+
+test("a busca registra os filtros escolhidos no evento de funil", async () => {
+  const fetchSpy = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response(null, { status: 204 }));
+  vi.stubGlobal("fetch", fetchSpy);
+  const user = userEvent.setup();
+
+  await user.click(screen.getByRole("button", { name: /pernoite/i }));
+  await user.click(field());
+  await user.click(screen.getByRole("option", { name: "Zona Sul" }));
+  fireEvent.submit(document.querySelector("form") as HTMLFormElement);
+
+  await waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
+  const body = JSON.parse(String(fetchSpy.mock.calls[0][1]?.body));
+
+  expect(body).toMatchObject({
+    eventName: "search_started",
+    context: { zone: "Sul", stayIntent: "pernoite" },
+  });
 });
