@@ -46,3 +46,10 @@ test("a marca aparece como link para a home", () => {
 
   expect(screen.getAllByRole("link", { name: /pátio livre/i }).length).toBeGreaterThan(0);
 });
+
+test("a home deixa claro como os dados do visitante são usados", () => {
+  render(<HomePage />);
+
+  expect(screen.getByRole("heading", { name: /sua privacidade também tem espaço aqui/i })).toBeInTheDocument();
+  expect(screen.getByText(/usamos seus dados somente para cuidar da sua solicitação/i)).toBeInTheDocument();
+});
