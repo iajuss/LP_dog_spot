@@ -86,6 +86,21 @@ export default function HomePage() {
 
       <FaqSection />
 
+      <section className="bg-lime-300 px-5 py-12 sm:px-8 sm:py-16 lg:px-12">
+        <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] sm:items-start sm:gap-12">
+          <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-950/70">Privacidade</p>
+          <div>
+            <h2 className="text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl">
+              Sua privacidade também tem espaço aqui.
+            </h2>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-emerald-950/80">
+              Usamos seus dados somente para cuidar da sua solicitação, manter contato sobre a estadia e melhorar a
+              experiência de vocês. Você continua no controle do que compartilha.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-emerald-950/10 bg-[#f8f4eb] px-5 py-10 sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-5 sm:flex-row sm:items-center">
           <BrandLogo />
