@@ -92,10 +92,7 @@ export default function HomePage() {
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-stone-600">
             <Link className="hover:text-emerald-900" href="/espacos">Espaços</Link>
             <Link className="hover:text-emerald-900" href="/reservar?kind=availability_alert">Quero ser avisado</Link>
-            <Link
-              className="rounded-full border border-emerald-950/20 px-4 py-2 font-semibold text-emerald-950 transition hover:border-emerald-950 hover:bg-emerald-950 hover:text-white"
-              href="/privacidade"
-            >
+            <Link className="hover:text-emerald-900" href="/privacidade">
               Privacidade
             </Link>
           </div>
