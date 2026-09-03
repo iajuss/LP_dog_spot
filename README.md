@@ -21,7 +21,7 @@ npm run build
 
 ## Supabase e magic link
 
-Preencha as variáveis de `.env.local` com os valores do projeto Supabase. O código aceita tanto os nomes clássicos (`NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) quanto os novos, injetados pela integração com a Vercel (`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`). Em **Authentication → URL Configuration**, defina o Site URL como `https://patiolivre.com` e autorize `https://patiolivre.com/auth/callback` e `http://localhost:3000/auth/callback`. A chave `SUPABASE_SERVICE_ROLE_KEY` é exclusiva do servidor e nunca deve ser exposta no navegador.
+Preencha as variáveis de `.env.local` com os valores do projeto Supabase. O código aceita tanto os nomes clássicos (`NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) quanto os novos, injetados pela integração com a Vercel (`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`). Em **Authentication → URL Configuration**, autorize `http://localhost:3000/auth/callback` e, no deploy, `https://SEU-DOMINIO/auth/callback`. A chave `SUPABASE_SERVICE_ROLE_KEY` é exclusiva do servidor e nunca deve ser exposta no navegador.
 
 Antes do deploy, aplique as migrações de `supabase/migrations/` em ordem, da mais antiga para a mais recente, no SQL Editor ou com a Supabase CLI.
 
