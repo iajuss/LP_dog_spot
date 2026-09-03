@@ -1,7 +1,7 @@
 "use client";
 
 import { CATALOG_NEIGHBORHOODS, ZONES } from "@/lib/domain/catalog";
-import { trackEvent } from "@/lib/track-client";
+import { trackFilterEvent } from "@/lib/track-client";
 import { ComboBox } from "./combo-box";
 import type { ComboOption } from "./combo-options";
 import { StayIntentPicker } from "./stay-intent-picker";
@@ -17,7 +17,7 @@ const OPTIONS: ComboOption[] = [
 
 export function LocationSearch() {
   return (
-    <form action="/espacos" className="grid gap-4" onSubmit={() => trackEvent("search_started")}>
+    <form action="/espacos" className="grid gap-4" onSubmit={(event) => trackFilterEvent("search_started", event.currentTarget)}>
       {/* Os chips ficam soltos sobre a foto; só a busca ganha o bloco de cor. */}
       <StayIntentPicker />
       <div className="rounded-[1.5rem] bg-lime-300 p-1.5 shadow-2xl shadow-black/20 sm:rounded-[1.75rem]">

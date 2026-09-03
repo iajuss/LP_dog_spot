@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CATALOG_NEIGHBORHOODS,
   DOG_SIZES,
@@ -9,6 +11,7 @@ import {
   ZONES,
 } from "@/lib/domain/catalog";
 import type { SearchFilters } from "@/lib/domain/filters";
+import { trackFilterEvent } from "@/lib/track-client";
 import { ComboBox } from "./combo-box";
 import { toComboOptions } from "./combo-options";
 import { StyledSelect } from "./styled-select";
@@ -24,7 +27,8 @@ export function FilterPanel({ filters }: FilterPanelProps) {
         Filtros
         <span className="rounded-full bg-lime-200 px-3 py-1 text-xs md:hidden">Abrir</span>
       </summary>
-      <form action="/espacos" className="grid gap-5 border-t border-stone-100 p-5">
+      <form action="/espacos" className="grid gap-5 border-t border-stone-100 p-5" onSubmit={(event) => trackFilterEvent("filters_changed", event.currentTarget)}>
+        {!filters.useType && filters.stayIntent ? <input name="intencao" type="hidden" value={filters.stayIntent} /> : null}
         <ComboBox
           hint="Digite para encontrar mais rápido."
           label="Bairro"
