@@ -52,3 +52,11 @@ test("o rodapé leva às informações de privacidade", () => {
 
   expect(screen.getByRole("link", { name: "Privacidade" })).toHaveAttribute("href", "/privacidade");
 });
+
+test("privacidade usa o mesmo estilo dos demais links do rodapé", () => {
+  render(<HomePage />);
+
+  expect(screen.getByRole("link", { name: "Privacidade" }).className).toBe(
+    screen.getByRole("link", { name: "Espaços" }).className,
+  );
+});
